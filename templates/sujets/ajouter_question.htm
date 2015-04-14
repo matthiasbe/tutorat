@@ -1,0 +1,129 @@
+<check if="{{isset(@PARAMS.id)}}">
+    <true>
+        <h2>Ajouter un question</h2>
+        <h4>Sujet n°{{ @PARAMS.id }}, question n°{{ @num_question }}</h4>
+    </true>
+    <false>
+        <h2>Proposer une question indépendante</h2>
+    </false>
+</check>
+
+<form class="form-horizontal" method="post" action="ajouter_question/reception">
+    
+    <div class="form-group">
+        <label for="matiere">Matière : </label>
+        <select name="matiere">
+            {{@SESSION.user->matieresSuiviesEnOption(@f3)}}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="question">Question : </label>
+        <div class="input-group">
+            <input type="text" name="question" id="question" class="form-control"/>
+            <span class="input-group-btn">
+                <button onclick="tata='question'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default" type="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </span>
+        </div>
+    </div>
+
+    <!--Affichage des 5 items-->
+    <repeat group="{{ array(1,2,3,4,5) }}" value="{{ @num_item }}" >
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="form-group-sm">
+                        <label for="item{{ @num_item }}" class="control-label">Item {{ @num_item }} : </label>
+                        <div class="input-group">
+                            <input type="text" name="item{{ @num_item }}" id="item{{ @num_item }}" class="form-control"/>
+                        <span class="input-group-btn">
+                            <button onclick="tata='item{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label for="correction{{ @num_item }}" class="control-label">Correction : </label>
+                        <div class="input-group">
+                            <input type="text" name="correction{{ @num_item }}" id="correction{{ @num_item }}" class="form-control"/>
+                            <span class="input-group-btn">
+                                <button onclick="tata='correction{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="radio">
+                        <label>
+                            <input checked type="radio" name="reponse{{ @num_item }}" id="reponse{{ @num_item }}1" value="1"/>
+                            Vrai
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="reponse{{ @num_item }}" id="reponse{{ @num_item }}0" value="0"/>
+                            Faux
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </repeat>
+    <button class="btn btn-default" type="submit">Enregistrer</button>
+</form>
+
+<!-- Fenêtre d'ajout d'équation -->
+<div class="modal fade modal_ajout" role="dialog" aria-labelledby="ajouter-equation" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Ajouter une équation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <textarea id='formula1' class='mathdoxformula' rows='10' cols='80'>
+
+                      &lt;OMOBJ xmlns='http://www.openmath.org/OpenMath'>
+                        &lt;OMA>
+                          &lt;OMS cd='arith1' name='divide'/>
+                          &lt;OMA>
+                            &lt;OMS cd='arith1' name='minus'/>
+                            &lt;OMA>
+                              &lt;OMS cd='arith1' name='power'/>
+                              &lt;OMV name='q'/>
+                              &lt;OMI>2&lt;/OMI>
+                            &lt;/OMA>
+                            &lt;OMI>1&lt;/OMI>
+                          &lt;/OMA>
+                          &lt;OMA>
+                            &lt;OMS cd='arith1' name='minus'/>
+                            &lt;OMV name='q'/>
+                            &lt;OMI>1&lt;/OMI>
+                          &lt;/OMA>
+                        &lt;/OMA>
+                      &lt;/OMOBJ>
+
+                    </textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button onclick="add_equation()" class="btn btn-primary" data-dismiss="modal">Ajouter</button>
+              <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript' src='http://mathdox.org/formulaeditor/main.js'></script>
+<script type="text/javascript">
+    function add_equation() {
+        $('#' + tata).val($('#' + tata).val() + '[equation 15]');
+    }
+</script>

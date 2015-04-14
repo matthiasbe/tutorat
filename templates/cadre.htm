@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>Tutorat Médecine Kremlin-Bicêtre</title>
+    <link rel="stylesheet" href="{{ @root }}css/bootstrap.min.css">
+    <link href="{{ @root }}css/simple-sidebar.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ @root }}css/design.css" />
+    <meta charset="utf-8">
+        
+    <!-- Interdit l'utilisation du mode de comptabilité IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--Affichage sur les naviguateurs mobiles-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+    
+<body>
+    <script src="{{ @root }}js/jquery.js"></script>
+    <script src="{{ @root }}js/jquery-ui.min.js"></script>
+    <div class="container">
+        <div class="row">
+            <include href="templates/menu.htm" />
+        </div>
+        <div class="row">
+            <div class="col-md-3 sidebar">
+                <include href="templates/sidebar.htm" />
+            </div>
+
+            <div class="col-md-9">
+                <include href="{{ @page }}" />
+            </div>
+        </div>
+    </div>
+    <script src="{{ @root }}js/bootstrap.min.js"></script>
+</body>
+</html>

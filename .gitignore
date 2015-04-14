@@ -1,0 +1,4 @@
+*.swp
+/nbproject/
+files/download/
+config/bdd*

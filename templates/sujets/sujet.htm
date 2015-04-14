@@ -1,0 +1,227 @@
+<h2>Sujet n°{{ @sujet.id }}</h2>
+<button class="btn btn-info" data-toggle="modal" data-target=".modal_ajout">Ajouter une question</button>
+<button class="btn">Supprimer le sujet</button>
+<a class="btn" href="{{ @PARAMS.id }}/pdf">Télécharger la version PDF</a>
+
+<p>Auteur : {{ @SESSION.user->getPseudo(@f3, @sujet.auteurs) }}</p>
+<p>Matière : {{@matieres[@sujet.matiere]}}</p>
+<p>Le sujet comporte {{@sujet.nombre_questions}} questions</p>
+
+<table class="table-striped">
+    <repeat group="{{ @questions }}" value="{{ @champs }}">
+        <tr>
+            <td><button class="btn" data-toggle="collapse" data-target=".items_question{{@champs.numero_question}}"><span class="glyphicon glyphicon-plus"></span></button></td>
+            <td><button onclick="monter({{@champs.id}},{{@champs.numero_question}})" class="btn"><span class="glyphicon glyphicon-chevron-up"></span></button></td>
+            <td><button onclick="descendre({{@champs.id}},{{@champs.numero_question}})" class="btn"><span class="glyphicon glyphicon-chevron-down"></span></button></td>
+            <td><strong>Q{{ @champs.numero_question}} : </strong>{{ @champs.question }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 0, '{{@champs.question}}')" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+            <td><img onclick="detacherQuestion({{@champs.numero_question}})" class="bouton" src="{{@root}}files/images/delete.png" alt="Supprimer"/></td>
+        </tr>
+        <tr class="collapse {{ @reponse(@champs.reponse, 1)?'colored':'colored_red'}} items_question{{@champs.numero_question}}">
+            <td colspan="4">Item 1 : {{ @champs.item1 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 1, '{{@champs.item1}}')" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse items_question{{@champs.numero_question}}">
+            <td colspan="4">Correction : {{ @champs.correction1 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 1, '{{@champs.correction1}}',1)" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse {{ @reponse(@champs.reponse, 2)?'colored':'colored_red'}} items_question{{@champs.numero_question}}">
+            <td colspan="4">Item 2 : {{ @champs.item2 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 2, '{{@champs.item2}}')" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse items_question{{@champs.numero_question}}">
+            <td colspan="4">Correction : {{ @champs.correction2 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 2, '{{@champs.correction2}}',1)" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse {{ @reponse(@champs.reponse, 3)?'colored':'colored_red'}} items_question{{@champs.numero_question}}">
+            <td colspan="4">Item 3 : {{ @champs.item3 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 3, '{{@champs.item3}}')" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse items_question{{@champs.numero_question}}">
+            <td colspan="4">Correction : {{ @champs.correction3 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 3, '{{@champs.correction3}}',1)" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse {{ @reponse(@champs.reponse, 4)?'colored':'colored_red'}} items_question{{@champs.numero_question}}">
+            <td colspan="4">Item 4 : {{ @champs.item4 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 4, '{{@champs.item4}}')" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse items_question{{@champs.numero_question}}">
+            <td colspan="4">Correction : {{ @champs.correction4 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 4, '{{@champs.correction4}}',1)" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse {{ @reponse(@champs.reponse, 5)?'colored':'colored_red'}} items_question{{@champs.numero_question}}">
+            <td colspan="4">Item 5 : {{ @champs.item5 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 5, '{{@champs.item5}}')" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+        <tr class="collapse items_question{{@champs.numero_question}}">
+            <td colspan="4">Correction : {{ @champs.correction5 }}</td>
+            <td><img onclick="afficherModifier({{ @champs.numero_question}}, 5, '{{@champs.correction5}}',1)" class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier"/></td>
+        </tr>
+    </repeat>
+</table>
+
+<!--Fenêtre de choix entre ajout de question existante ou non-->
+<div class="modal fade modal_ajout" role="dialog" aria-labelledby="ajouter-question" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Ajout de question</h4>
+            </div>
+            <div class="modal-body">
+                <p>Sélectionner un question existante ?</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target=".modal_rechercher">Question existante</button>
+              <button class="btn btn-primary" onclick="document.location='{{ @PARAMS.id }}/ajouter_question'">Nouvelle question</button>
+              <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Fenêtre de recherche d'une question-->
+<div class="modal fade modal_rechercher" role="dialog" aria-labelledby="rechercher-question" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Recherche d'une question</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <input id="recherche_input" type="text" placeholder="id, question ..." />
+                    <button type="submit" class="btn btn-info" onclick="rechercher();">Rechercher</button>
+                </p>
+                <p id="resultats"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function supprimerSujet() {
+        var confirmation = confirm("Voulez vous vraiment supprimer le sujet n°" + {{@PARAMS.id}});
+        if(confirmation) {
+            $.post('{{@root}}ajax/sujet/delete',
+                {id: {{@PARAMS.id}}},
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '{{@root}}sujets/';
+            });
+        }
+    }
+    
+    function afficherModifier(question, item, ancienne_valeur, correction = 0) {
+        if(item)
+            if(correction)
+                autre = ' : correction ' + item;
+            else
+                autre = ' : item ' + item;
+        else
+            autre = '';
+        
+        var data = window.prompt('Modification de la question ' + question + autre, ancienne_valeur);
+        if(data != null) {
+            $.post('{{@root}}ajax/question/edit',
+                {
+                    sujet: {{@PARAMS.id}},
+                    question: question,
+                    item: item,
+                    correction: correction,
+                    data: data,
+                },
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '{{@root}}sujets/{{@PARAMS.id}}';
+            });
+        }
+    }
+    
+    function detacherQuestion(id) {
+        var confirmation = confirm("Voulez vous vraiment supprimer la question n°" + id);
+        if(confirmation) {
+            $.post('{{@root}}ajax/question/detacher',
+                {
+                    question: id,
+                    sujet: {{@PARAMS.id}},
+                },
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location.reload();
+            });
+        }
+    }
+    
+    function attacherQuestion(id) {
+        $.post('{{@root}}ajax/question/attacher',
+            {
+                question: id,
+                sujet: {{@PARAMS.id}},
+            },
+            function (data) {
+                if(data != '')
+                    alert('Erreur : ' + data);
+                else
+                    document.location.reload();
+        });
+    }
+    
+    function rechercher() {
+        var content = $('#recherche_input').val();
+        $.post('{{@root}}ajax/question/rechercher',
+            {
+                recherche: content,
+            },
+            function (data) {
+                $('#resultats').html((data));
+        });
+    }
+    
+    function monter(id, num) {
+        
+        if(num > 1) {
+            $.post('{{@root}}ajax/question/monter',
+                {
+                    num_question: num,
+                    sujet: {{@PARAMS.id}},
+                },
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location.reload();
+            });
+        }
+        else
+            alert('Erreur: il s\'agit de la première question.')
+    }
+    
+    function descendre(id, num) {
+        if(num < {{@sujet.nombre_questions}}) {
+            $.post('{{@root}}ajax/question/descendre',
+                {
+                    id_question: id,
+                    num_question: num,
+                    sujet: {{@PARAMS.id}},
+                },
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location.reload();
+            });
+        }
+        else
+            alert('Erreur: il s\'agit de la dernière question.')
+    }
+</script>

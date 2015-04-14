@@ -1,0 +1,41 @@
+<h2>{{@titre}}</h2>
+
+<table class="table table-hover">
+    <tr>
+        <th>Numéro</th>
+        <th>Auteur</th>
+        <th>Matière</th>
+        <th>Numéro sujet</th>
+        <th>Question</th>
+        <th>Date</th>
+        <th>Supprimer</th>
+    </tr>
+    <repeat group="{{ @questions }}" value="{{ @champs }}">
+        <check if="{{ @champs.matiere == @matiereAffichee or @matiereAffichee == 'all' }}">
+            <tr class="bouton" onclick="">
+                <td>{{ @champs.id }}</td>
+                <td>{{ @SESSION.user->getPseudo(@f3, @champs.auteurs) }}</td>
+                <td>{{ @matieres[@champs.matiere] }}</td>
+                <td>{{ @champs.sujet_id }}</td>
+                <td>{{ abreger(@champs.question, 50) }}</td>
+                <td>{{ @champs.date }}</td>
+                <td><button class="btn btn-info" onclick="supprimerQuestion({{@champs.id}})">Supprimer</button></td>
+            </tr>
+        </check>
+    </repeat>
+</table>
+<script type="text/javascript">
+    function supprimerQuestion(id) {
+        var confirmation = confirm("Voulez vous vraiment supprimer la question n°" + id);
+        if(confirmation) {
+            $.post('{{@root}}ajax/question/delete',
+                {question: id},
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '{{@root}}sujets/liste_questions/';
+            });
+        }
+    }
+</script>

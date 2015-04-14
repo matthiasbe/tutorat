@@ -1,0 +1,49 @@
+<h2>Ajout de membres</h2>
+
+<form method="post" action="ajouter/reception">
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="pseudo">Identifiant : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="pseudo" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="mdp">Mot de passe : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="password" name="mdp" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="email">Email : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="email" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Numéro de portable : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="portable" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Matières attitrées</label>
+        </div>
+        <div class="col-lg-10">
+        <repeat group="{{ @matieres }}" key="{{@key}}" value="{{@value}}"">
+            <div class="checkbox">
+                <label><input type="checkbox" name="matiere{{@key}}" class=""/>{{@value}}</label>
+            </div>
+        </repeat>
+        </div>
+    </div>
+    <button type="submit" class="btn">Envoyer</button>
+</form>

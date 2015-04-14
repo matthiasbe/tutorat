@@ -1,0 +1,45 @@
+<h2>{{@titre}}</h2>
+
+<table class="table table-hover">
+    <tr>
+        <th>Numéro</th>
+        <th>Auteur</th>
+        <th>Matière</th>
+        <th>Numéro CB</th>
+        <th>Nombre de questions</th>
+        <th>Date</th>
+        <th>Notions</th>
+        <th>Supprimer</th>
+        <th>Télécharger</th>
+    </tr>
+    <repeat group="{{ @result }}" value="{{ @champs }}">
+        <check if="{{ @champs.matiere == @matiereAffichee or @matiereAffichee == 'all' }}">
+            <tr class="bouton" onclick="document.location='{{ @root }}sujets/{{ @champs.id }}'">
+                <td>{{ @champs.id }}</td>
+                <td>{{ @SESSION.user->getPseudo(@f3, @champs.auteurs) }}</td>
+                <td>{{ @matieres[@champs.matiere] }}</td>
+                <td>{{ @champs.numero_cb }}</td>
+                <td>{{ @champs.nombre_questions }}</td>
+                <td>{{ @champs.date }}</td>
+                <td>{{ @champs.notions }}</td>
+                <td><button class="btn btn-info" onclick="supprimerSujet({{@champs.id}})">Supprimer</button></td>
+                <td><a href="{{ @root }}sujets/{{ @champs.id }}/pdf">Downloads</a></td>
+            </tr>
+        </check>
+    </repeat>
+</table>
+<script type="text/javascript">
+    function supprimerSujet(id) {
+        var confirmation = confirm("Voulez vous vraiment supprimer le sujet n°" + id);
+        if(confirmation) {
+            $.post('{{@root}}ajax/sujet/delete',
+                {id: id},
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '{{@root}}sujets/';
+            });
+        }
+    }
+</script>

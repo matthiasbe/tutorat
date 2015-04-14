@@ -1,0 +1,28 @@
+/* !mportant permet d'outrepasser les paramètres bootstrap */
+a:hover{
+     color: blue !important;
+}
+
+// Permet de colorer les tr en bleu quand on les survole dans la liste des sujets
+.lienListeSujets:hover {
+}
+
+// Couleur différenciant les question fausse des questions vrai dans l'affichage d'un sujet'
+.colored_red{
+    color: red !important;
+}
+.colored_green{
+    color: green !important;
+}
+
+.bouton
+{
+    cursor: pointer;
+}
+
+/*
+A FAIRE en design
+
+# customiser les fomulaires
+# afficher un sujet en cliquant sur la "barre" correspondante dans la liste des sujets
+*/

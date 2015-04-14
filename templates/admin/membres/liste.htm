@@ -1,0 +1,14 @@
+<table class="table table-hover">
+    <tr>
+        <th>Numéro</th>
+        <th>Pseudo</th>
+        <th>Statut</th>
+    </tr>
+    <repeat group="{{ @membres }}" value="{{ @champs }}">
+        <tr>
+            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs.id }}'">{{ @champs.id }}</td>
+            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs.id }}'">{{ @champs.pseudo }}</td>
+            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs.id }}'">{{ @nom_statuts[@champs.statut] }}</td>
+        </tr>
+    </repeat>
+</table>
