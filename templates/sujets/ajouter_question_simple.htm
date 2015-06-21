@@ -1,0 +1,67 @@
+<form class="form-horizontal" method="post" action="ajouter_question/reception">
+<check if="{{isset(@PARAMS.id)}}">
+    <true>
+        <!-- Si il y a un sujet sélectionner, un affiche le nom de du sujet. -->
+        <h2>Ajouter un question</h2>
+        <h4>Sujet n°{{ @PARAMS.id }}, question n°{{ @num_question }}</h4>
+    </true>
+    <false>
+        <!-- Si il n'y a pas de sujet sélectionner, un affiche la liste des matières à séletionner. -->
+        <h2>Proposer une question indépendante</h2>
+        <div class="form-group">
+            <label for="matiere">Matière : </label>
+            <select name="matiere">
+                {{@SESSION.user->matieresSuiviesEnOption(@f3)}}
+            </select>
+        </div>
+    </false>
+</check>
+
+    
+
+    <!-- Affichage de la question -->
+    <div class="form-group">
+        <label for="question">Question : </label>
+        <div class="input">
+            <input type="text" name="question" id="question" class="form-control"/>
+        </div>
+    </div>
+
+    <!-- Affichage des 5 items -->
+    <repeat group="{{ array(1,2,3,4,5) }}" value="{{ @num_item }}" >
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="form-group-sm">
+                        <label for="item{{ @num_item }}" class="control-label">Item {{ @num_item }} : </label>
+                        <div class="input">
+                            <input type="text" name="item{{ @num_item }}" id="item{{ @num_item }}" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group-sm">
+                        <label for="correction{{ @num_item }}" class="control-label">Correction : </label>
+                        <div class="input">
+                            <input type="text" name="correction{{ @num_item }}" id="correction{{ @num_item }}" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="radio">
+                        <label>
+                            <input checked type="radio" name="reponse{{ @num_item }}" id="reponse{{ @num_item }}1" value="1"/>
+                            Vrai
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="reponse{{ @num_item }}" id="reponse{{ @num_item }}0" value="0"/>
+                            Faux
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </repeat>
+    <button class="btn btn-default" type="submit">Enregistrer</button>
+</form>

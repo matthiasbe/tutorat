@@ -21,15 +21,12 @@
 
     <!-- Affichage de la question -->
     <div class="form-group">
+        <button onclick="focused_input='question'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-edit"></span>
+        </button>
         <label for="question">Question : </label>
-        <div class="input-group">
-            <input type="text" name="question" id="question" class="form-control"/>
-            <span class="input-group-btn">
-                 <!--Bouton pour ajouter une équation à la question--> 
-                <button onclick="focused_input='question'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default" type="button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-            </span>
+        <div class="container">
+            <div class="container" border="2px solid black" id="question"></div>
         </div>
     </div>
 
@@ -39,27 +36,18 @@
             <div class="row">
                 <div class="col-lg-10">
                     <div class="form-group-sm">
+                        <button onclick="focused_input='item{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
                         <label for="item{{ @num_item }}" class="control-label">Item {{ @num_item }} : </label>
-                        <div class="input-group">
-                            <input type="text" name="item{{ @num_item }}" id="item{{ @num_item }}" class="form-control"/>
-                        <span class="input-group-btn">
-                            <!--Bouton pour ajouter une équation à l'item-->
-                            <button onclick="focused_input='item{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                        </span>
-                    </div>
+                        <div id="item{{ @num_item }}" class="container"></div>
                     </div>
                     <div class="form-group-sm">
-                        <label for="correction{{ @num_item }}" class="control-label">Correction : </label>
-                        <div class="input-group">
-                            <input type="text" name="correction{{ @num_item }}" id="correction{{ @num_item }}" class="form-control"/>
-                            <span class="input-group-btn">
-                                <button onclick="focused_input='correction{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-plus"></span>
-                                </button>
-                            </span>
-                        </div>
+                        <button onclick="focused_input='correction{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </button>
+                        <label for="correction{{ @num_item }}" class="control-label">Correction {{ @num_item }} : </label>
+                        <div id="correction{{ @num_item }}" class="container"></div>
                     </div>
                 </div>
                 <div class="col-lg-2">
@@ -84,13 +72,36 @@
 </form>
 
 <!-- Fenêtre d'ajout d'équation -->
-<div class="modal fade modal_ajout" role="dialog" aria-labelledby="ajouter-equation" aria-hidden="true">
-    <include href="templates/equation/eqn_editor.htm" />
+<div class="modal fade modal_ajout" role="dialog" aria-labelledby="editer-champ" aria-hidden="true">
+    <include href="templates/editor/editor.htm" />
 </div>
 
-<script type='text/javascript' src='http://mathdox.org/formulaeditor/main.js'></script>
+<script type='text/javascript' src='{{ @root }}/js/tinymce/tinymce.min.js'></script>
 <script type="text/javascript">
-    function add_equation(id) {
-        $('#' + focused_input).val($('#' + focused_input).val() + '[equation ' + id + ']');
+    var focused_input;
+    
+    tinymce.init({
+        selector: "#editeur",
+        plugins: "eqneditor",
+        toolbar: "undo redo | bold italic | bullist numlist | eqneditor "
+    });
+
+    function enregistrer() {
+
+        
+        if(id == 0) {
+            // id = 0 indique qu'il s'agit d'une nouvelle équation à stocker
+            $.post('{{@root}}ajax/equation/add',
+                {
+                    eqn: eqn,
+                    nom: '',
+                    id: id,
+                },
+                function (data) { // une fois qu'on a la valeur de retour
+                    if(data != '') alert('Erreur : ' + data);
+                    maj_equations();
+            });
+        }
     }
+    
 </script>
