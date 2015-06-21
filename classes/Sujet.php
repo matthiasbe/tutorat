@@ -51,6 +51,7 @@ class Sujet
         else
             $this->id = 0;
         
+        $manager = EquationManager::getInstance();
         
         afficherPage($f3, 'templates/sujets/ajouter_question.htm');
     }

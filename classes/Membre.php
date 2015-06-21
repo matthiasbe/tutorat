@@ -20,6 +20,10 @@ class Membre {
         $f3->set('membre', $membre->getMembreFromId($f3));
         $f3->set('membre_class', $membre);
         
+        /* Fonction permettant d'afficher le bouton de modification des champs :
+         * ce bouton appelle une fonction javascript 'modifier' qui afficher
+         * un popup contenant l'ancienne valeur ainsi qu'un bouton ok mettant
+         * à jour le champ en ajax */
         $f3->set('afficherBoutonModifier', function ($f3, $champ) {
             if($this->estAutoriseAModifier($f3, $f3->get('PARAMS.id'), $champ)) {
                 echo '<img class="bouton" onclick="modifier(\'' . $champ . '\', \''

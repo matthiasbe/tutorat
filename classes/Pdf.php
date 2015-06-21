@@ -66,19 +66,31 @@ class Pdf extends TCPDF {
         }
         
         function question($question) {
-            $this->writeHTML('<br/><h4>QCM ' . $question['numero_question'] . '. ' . $question['question'] . ' :</h4><br/>');
+                $eqn_manager = EquationManager::getInstance();
+                $texte = '';
 
-            if($question['largeur_image'])
-                $attribut_largeur = ' width="' . $question['largeur_image'] . '" ';
-            else
-                $attribut_largeur = ' ';
 
-            if($question['image'] != '') {
-                $this->writeHTML('<p><img src="' . realpath('') . '/files/images/' . $question['image'] . '" ' . $attribut_largeur . '/></p>');
+                // On concatène la question
+                $texte .= '<br/><h4>QCM ' . $question['numero_question'] . '. ' . $question['question'] . ' :</h4><br/>';
 
-            }
-            for($i=1; $i<=5;$i++) {
-                $this->writeHTML('<p>' . ($i + 5*($question['numero_question']-1)) . ') '. $question['item' . $i] . '</p>');
-            }
+                // Calcul des dimensions de l'image
+                if($question['largeur_image'])
+                        $attribut_largeur = ' width="' . $question['largeur_image'] . '" ';
+                else
+                        $attribut_largeur = ' ';
+
+                // On concatène l'image
+                if($question['image'] != '') {
+                        $texte .= '<p><img src="' . realpath('') . '/files/images/' . $question['image'] . '" ' . $attribut_largeur . '/></p>';
+
+                }
+
+                // On concatène les cinq items
+                for($i=1; $i<=5;$i++) {
+                        $texte .= '<p>' . ($i + 5*($question['numero_question']-1)) . ') '. $question['item' . $i] . '</p>';
+                }
+
+                // On affiche le tout, en remplaçant les labels par les équations
+                $this->writeHTML($eqn_manager->placerEquations($texte));
         }
 }
