@@ -12,7 +12,7 @@
     </tr>
     <repeat group="{{ @questions }}" value="{{ @champs }}">
         <check if="{{ @champs.matiere == @matiereAffichee or @matiereAffichee == 'all' }}">
-            <tr class="bouton" onclick="">
+            <tr class="bouton" onclick="modifierQuestion({{@champs.sujet_id}},{{@champs.id}})">
                 <td>{{ @champs.id }}</td>
                 <td>{{ @SESSION.user->getPseudo(@f3, @champs.auteurs) }}</td>
                 <td>{{ @matieres[@champs.matiere] }}</td>
@@ -36,6 +36,17 @@
                     else
                         document.location = '{{@root}}sujets/liste_questions/';
             });
+        }
+    }
+    
+    function modifierQuestion(id_sujet, id_question) {
+        if(id_sujet == 0) {
+            //Si la question n'est pas rattaché à un sujet, on affiche la question
+            document.location = '{{@root}}sujets/question/'+id_question+'/';
+        }
+        else {
+            //Si la question est rattaché à un sujet, on affiche le sujet
+            document.location = '{{@root}}sujets/'+id_sujet+'/';
         }
     }
 </script>

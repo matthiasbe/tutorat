@@ -5,11 +5,13 @@
  * Ce fichier et chargé en début de toute les pages
  */
 
-function getBit($sequence, $num_bit) {
-    if(strlen($sequence) < $num_bit OR !substr($sequence, -$num_bit, 1)) return '0';
-    else return '1';
+/* Renvoie le nieme bit du nombre passé en paramètre */
+function getBit($nombre, $n) {
+    return (pow(2, $n) & $nombre)/pow(2, $n);
 }
 
+/* Renvoie TRUE si l'utilisateur loggé peut accéder à la page $page
+    $page est le nom du template à accéder (ex: 'mon_template.htm') */
 function verifierPermission($f3, $page) {
     /* si utilisateur connecté, on vérifie qu'il a bien les droits */
     if($f3->exists('SESSION.user')) {
@@ -53,4 +55,9 @@ function abreger($chaine, $taille_max) {
             return substr($chaine, $taille_max);
     }
     else return $chaine;
+}
+
+function test() {
+    echo '<h2>TEST</h2>';
+    echo ImgMng::getInstance()->estUneImage('files/images/edit.png');
 }

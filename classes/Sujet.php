@@ -45,13 +45,34 @@ class Sujet
     
     public function afficherAjouterQuestion($f3){
         if($f3->exists('PARAMS.id')) {
+            /* Question rattachée à un sujet */
             $this->id = $f3->get('PARAMS.id');
-            $f3->set('num_question', $this->numQuestionSuiv($f3));
+            $f3->set('id_sujet', $f3->get('PARAMS.id'));
+            if($f3->exists('PARAMS.question')) {
+                /* Modification d'une question existante */
+                $f3->set('num_question', $f3->get('PARAMS.question'));
+                $f3->set('question', $this->getQuestionFromNum($f3, $f3->get('PARAMS.question')));
+            }
+            else {
+                /* Ajout d'une nouvelle question */
+                $f3->set('num_question', 0);
+                $f3->set('num_question_suiv', $this->numQuestionSuiv($f3));
+            }
         }
-        else
+        else {
+            /* Question indépendante */
             $this->id = 0;
-        
-        $manager = EquationManager::getInstance();
+            $f3->set('id_sujet', 0);
+            if($f3->exists('PARAMS.question')) {
+                /* Modification d'une question existante */
+                $f3->set('num_question', $f3->get('PARAMS.question'));
+                $f3->set('question', $this->getQuestion($f3, $f3->get('PARAMS.question')));
+            }
+            else {
+                /* Ajout d'une nouvelle question */
+                $f3->set('num_question', 0);
+            }
+        }
         
         afficherPage($f3, 'templates/sujets/ajouter_question.htm');
     }

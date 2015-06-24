@@ -1,107 +1,240 @@
-<form class="form-horizontal" method="post" action="ajouter_question/reception">
+<!--
+    ajouter_question.htm
+    formulaire d'ajout/édition d'une question et de ses items
+
+    si id_sujet = 0 -> ajout
+    sinon -> édition (on remplit les champs avec les anciennes valeurs)
+
+    En réaliter pas de formulaire, on affiche les champ dans des div et un bouton 'modifier'
+    qui ouvre une popup (bootstrap dialog) avec l'éditeur TinyMCE permettant de l'éditer.
+    
+    La sauvegarde n'est faite que quand on appuie sur le bouton 'Enregistrer'
+
+-->
+
+<!--Affichage du titre-->
 <check if="{{isset(@PARAMS.id)}}">
     <true>
-        <!-- Si il y a un sujet sélectionner, un affiche le nom de du sujet. -->
-        <h2>Ajouter un question</h2>
-        <h4>Sujet n°{{ @PARAMS.id }}, question n°{{ @num_question }}</h4>
+    <!-- Si il y a un sujet sélectionné, on affiche le nom du sujet. -->
+    <check if="{{@num_question == 0}}">
+        <true>
+        <h2>Ajouter une question</h2>
+        <h4>Sujet n°{{ @id_sujet }}, question n°{{ @num_question_suiv }}</h4>
+        </true>
+        <false>
+        <h2>Modifier une question</h2>
+        <h4>Sujet n°{{ @id_sujet }}, question n°{{ @num_question }}</h4>
+        </false>
+    </check>
     </true>
     <false>
-        <!-- Si il n'y a pas de sujet sélectionner, un affiche la liste des matières à séletionner. -->
-        <h2>Proposer une question indépendante</h2>
-        <div class="form-group">
-            <label for="matiere">Matière : </label>
-            <select name="matiere">
-                {{@SESSION.user->matieresSuiviesEnOption(@f3)}}
-            </select>
-        </div>
+    <!-- Si il n'y a pas de sujet sélectionner, un affiche la liste des matières à sélectionner. -->
+    <check if="{{@num_question == 0}}">
+        <true><h2>Proposer une question indépendante</h2></true>
+        <false><h2>Modifier une question indépendante</h2></false>
+    </check>
+    <div class="form-group">
+        <label for="matiere">Matière : </label>
+        <select name="matiere">
+            {{@SESSION.user->matieresSuiviesEnOption(@f3)}}
+        </select>
+    </div>
     </false>
 </check>
+<p>Vous utilisez actuellement l'éditeur de question avancé. Cliquez sur un champ pour le modifier.</p>
 
-    
-
-    <!-- Affichage de la question -->
-    <div class="form-group">
-        <button onclick="focused_input='question'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default" type="button">
-            <span class="glyphicon glyphicon-edit"></span>
-        </button>
-        <label for="question">Question : </label>
-        <div class="container">
-            <div class="container" border="2px solid black" id="question"></div>
-        </div>
-    </div>
-
-    <!-- Affichage des 5 items -->
-    <repeat group="{{ array(1,2,3,4,5) }}" value="{{ @num_item }}" >
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-10">
-                    <div class="form-group-sm">
-                        <button onclick="focused_input='item{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
-                            <span class="glyphicon glyphicon-edit"></span>
-                        </button>
-                        <label for="item{{ @num_item }}" class="control-label">Item {{ @num_item }} : </label>
-                        <div id="item{{ @num_item }}" class="container"></div>
-                    </div>
-                    <div class="form-group-sm">
-                        <button onclick="focused_input='correction{{ @num_item }}'" data-toggle="modal" data-target=".modal_ajout" class="btn btn-default btn-sm" type="button">
-                            <span class="glyphicon glyphicon-edit"></span>
-                        </button>
-                        <label for="correction{{ @num_item }}" class="control-label">Correction {{ @num_item }} : </label>
-                        <div id="correction{{ @num_item }}" class="container"></div>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="radio">
-                        <label>
-                            <input checked type="radio" name="reponse{{ @num_item }}" id="reponse{{ @num_item }}1" value="1"/>
-                            Vrai
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="reponse{{ @num_item }}" id="reponse{{ @num_item }}0" value="0"/>
-                            Faux
-                        </label>
-                    </div>
+<!-- Affichage de la question -->
+<div class="container-fluid">
+        <!--checkbox pour savoir si cette question marque le début d'un exercice (cf UE biophysique)-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="checkbox">
+                    <input type="checkbox" id="exercice"/>Cette question commence un nouvel exercice.
                 </div>
             </div>
         </div>
+        <!--Enonce supérieur-->
+        <div class="row">
+            <div class="col-lg-2 checkbox">
+                <input type="checkbox" id="enonce_sup_checkbox"/> Enoncé sup :
+            </div>
+            <div class="col-lg-10 bouton collapse" onclick="focused_input = 'enonce_sup'" data-toggle="modal" data-target=".modal_ajout" id="enonce_sup_cell">
+                <div class="well" id="enonce_sup">
+                    <check if="{{isset(@question)}}">{{@question.enonce_sup}}</check>
+                </div>
+            </div>
+        </div>
+        <!--Question-->
+        <div class="row">
+            <div class="col-lg-2">
+                <p><strong>Question : </strong></p>
+            </div>
+            <div class="col-lg-10 bouton well" onclick="focused_input = 'question'" data-toggle="modal" data-target=".modal_ajout" id="question">
+                <check if="{{isset(@question)}}">{{@question.question}}</check>
+            </div>
+        </div>
+        <!--Enonce inférieur-->
+        <div class="row">
+            <div class="col-lg-2 checkbox">
+                <input type="checkbox" id="enonce_inf_checkbox"/> Enoncé inf : 
+            </div>
+            <div class="col-lg-10 bouton collapse" onclick="focused_input = 'enonce_inf'" data-toggle="modal" data-target=".modal_ajout" id="enonce_inf_cell">
+                <div class="well" id="enonce_inf">
+                    <check if="{{isset(@question)}}">{{@question.enonce_inf}}</check>
+                </div>
+            </div>
+        </div>
+        <!--Ajout d'une image-->
+        <div class="row">
+            <div class="col-lg-2"><p>Image : </p></div>
+            <div class="col-lg-10">
+                <!--Formulaire d'ajout d'image-->
+                <div class="container-fluid collapse" id="image_form">
+                    <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
+                        <div class="form-group">
+                            <label for="image_file">Uploader une image : </label>
+                            <input type="file" id="image_file" name="image_file" />
+                        </div>
+                        <input name="submit" type="submit" value="Uploader" />
+                    </form>
+                </div>
+                <!--Affichage de l'image-->
+                <div class="container-fluid collapse" id="image_cell">
+                    <div class="input-group">
+                        <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
+                        <label for="largeur_image">Largeur :</label>
+                        <input type="text" name="largeur_image" id="largeur_image" />
+                        <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
+                    </div>
+                    <check if="{{isset(@question) && @question.image != ''}}">
+                        <true><img id="image" src="{{@root}}files/images/{{@question.image}}" /></true>
+                        <false><img id="image" src="" /></false>
+                    </check>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Affichage des 5 items -->
+        <repeat group="{{ array(1,2,3,4,5) }}" value="{{ @num_item }}" >
+            <include href="templates/sujets/ajouter_question_item.htm" 
+                     <!-- On passe les différentes variables nécéssaire au rendu de l'item -->
+                     with="item='item'.{{@num_item}},corr='correction'.{{@num_item}}, rep='reponse'.{{@num_item}}, vrai='checked', faux=''" />
+        </repeat>
+</div>
 
-    </repeat>
-    <button class="btn btn-default" type="submit">Enregistrer</button>
-</form>
+<button class="btn btn-default" type="submit">Enregistrer</button>
 
 <!-- Fenêtre d'ajout d'équation -->
-<div class="modal fade modal_ajout" role="dialog" aria-labelledby="editer-champ" aria-hidden="true">
+<div class="modal fade modal_ajout" role="dialog" aria-labelledby="editer-bouton well" aria-hidden="true">
     <include href="templates/editor/editor.htm" />
 </div>
 
 <script type='text/javascript' src='{{ @root }}/js/tinymce/tinymce.min.js'></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
 <script type="text/javascript">
+
+    // Focused input contient le champs à modifier lorsqu'on ouvre la popup
     var focused_input;
     
-    tinymce.init({
-        selector: "#editeur",
-        plugins: "eqneditor",
-        toolbar: "undo redo | bold italic | bullist numlist | eqneditor "
-    });
-
-    function enregistrer() {
-
-        
-        if(id == 0) {
-            // id = 0 indique qu'il s'agit d'une nouvelle équation à stocker
-            $.post('{{@root}}ajax/equation/add',
-                {
-                    eqn: eqn,
-                    nom: '',
-                    id: id,
-                },
-                function (data) { // une fois qu'on a la valeur de retour
-                    if(data != '') alert('Erreur : ' + data);
-                    maj_equations();
-            });
+    // On coche les checkbox si nécessaire
+    // On ouvre les collapse en parallèle
+    if({{isset(@question)}}) {
+        if({{@question.exercice}})
+            $('#exercice').attr('checked', 'checked');
+        if('{{@question.enonce_sup}}' != '') {
+            $('#enonce_sup_checkbox').attr('checked', 'checked');
+            $('#enonce_sup_cell').collapse();
         }
+        if('{{@question.enonce_inf}}' != '') {
+            $('#enonce_inf_checkbox').attr('checked', 'checked');
+            $('#enonce_inf_cell').collapse();
+        }
+        if('{{@question.image}}' != '')
+            $('#image_cell').collapse();
+        else
+            $('#image_form').collapse();
     }
     
+    // On programme l'ouverture des collapses quand on coche la checkbox
+    $('#enonce_sup_checkbox').on('change', function(e) {
+        if($('#enonce_sup_checkbox').attr('checked'))
+            $('#enonce_sup_cell').collapse('show');
+        else
+            $('#enonce_sup_cell').collapse('hide');
+    });
+    $('#enonce_inf_checkbox').on('change', function(e) {
+        if($('#enonce_inf_checkbox').attr('checked'))
+            $('#enonce_inf_cell').collapse('show');
+        else
+            $('#enonce_inf_cell').collapse('hide');
+    });
+    
+    // Ajout de l'éditeur d'équation à TinyMCE
+    tinymce.init({
+    selector: "#editeur",
+            plugins: "eqneditor",
+            toolbar: "undo redo | bold italic | bullist numlist | eqneditor "
+    });
+    
+    // Enregistrement de la question dans la base de donnée
+    function enregistrer() {
+        $.post('{{@root}}ajax/question/save',
+        {
+        id_sujet: '{{@id_sujet}}',
+            question: $('#question').val(),
+            item1: $('#item1').val(),
+            correction1: $('#correction1').val(),
+            reponse1: $('input[name=reponse1]:checked').val(), // Ceci permet de récupérer la valeur de la réponse
+            item2: $('#item1').val(),
+            correction2: $('#correction1').val(),
+            reponse2: $('input[name=reponse1]:checked').val(),
+            item3: $('#item1').val(),
+            correction3: $('#correction1').val(),
+            reponse3: $('input[name=reponse1]:checked').val(),
+            item4: $('#item1').val(),
+            correction4: $('#correction1').val(),
+            reponse4: $('input[name=reponse1]:checked').val(),
+            item5: $('#item1').val(),
+            correction5: $('#correction1').val(),
+            reponse5: $('input[name=reponse1]:checked').val()
+        },
+            function (data) { // exécutée une fois qu'on a la valeur de retour
+                if (data != '') alert('Erreur : ' + data);
+                    else alert('La question à bien été enregistrée')
+            }
+        );
+    }
+    
+    // Upload de l'image en utilisant le plugin jquery 'form'
+    $(document).ready(function() {
+        $('#image_upload_form').ajaxForm({
+            success: function(data) {
+                retour = jQuery.parseJSON(data); // On décode les données renvoyées par ajax en echo
+                if(retour.erreur)
+                    alert('Erreur : ' + retour.message);
+                else {
+                    $('#image').attr('src', retour.image_path);
+                    $('#image_form').collapse('hide');
+                    $('#image_cell').collapse('show');
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('Une erreur est survenue lors de la requête ajax. Voici le contenu de la réponse : \n' + JSON.parse(xhr.responseText));
+            }
+        })
+    });
+    
+    // Suppression de l'image (de la question et du serveur)
+    function supprimerImage() {
+        $.post('{{@root}}ajax/question/image_delete/',
+            {
+                image_path: $('#image').attr('src')
+            },
+            function(data) {
+                $('#image').attr('src', '');
+            }
+        )
+        $('#image_cell').collapse('hide');
+        $('#image_form').collapse('show');
+    }
 </script>
