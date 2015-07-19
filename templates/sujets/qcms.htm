@@ -1,0 +1,9 @@
+<!--qcms.htm
+    Affiche tous les qcms pour une matiere passé par PARAMS.matiere-->
+
+<h2> Affichage des QCMs disponibles pour {{@f3->get('matieres')[@PARAMS.matiere]}}</h2>
+<ul>
+    <repeat group="{{@questions}}" value="{{@question}}">
+        <li><i>{{@question->getDate()}}</i> <b>{{@question->getQuestion()}}</b></li>
+    </repeat>
+</ul>

@@ -1,48 +1,64 @@
 <?php
 
-/* 
+/**
  * Fonctions globales utilisées partout
- * Ce fichier et chargé en début de toute les pages
+ * Ce fichier et chargé en début de chaque pages
  */
 
-/* Renvoie le nieme bit du nombre passé en paramètre */
+/**
+ * Renvoie le nieme bit du nombre passé en paramètre
+ * @param int $nombre
+ * @param int $n Le numéro du bit à renvoyé. En commençant par 1 le bit de poid faible (à droite).
+ * @return bool
+ */
 function getBit($nombre, $n) {
-    return (pow(2, $n) & $nombre)/pow(2, $n);
+    return floor($nombre/pow(2,$n-1))%2;
 }
 
-/* Renvoie TRUE si l'utilisateur loggé peut accéder à la page $page
-    $page est le nom du template à accéder (ex: 'mon_template.htm') */
-function verifierPermission($f3, $page) {
-    /* si utilisateur connecté, on vérifie qu'il a bien les droits */
-    if($f3->exists('SESSION.user')) {
-
-        $id_status = $f3->get('SESSION.user')->getMembreFromId($f3)['statut'];
-        /* On verifie que le status à été configurer (ou au moins un autre portant le même id */
-        if($f3->exists('statuts.' . $id_status)) {
-            $status = $f3->get('statuts.' . $id_status);
-            if($f3->exists($status . '.' . $page)) {
-                return $f3->get($status . '.' . $page);
-            }
+/**
+ * Renvoie le nombre binaire transformé tel que son nieme bit soit à la valeur $valeur.
+ * @access public
+ * @param int $nombre Le nombre à modifier.
+ * @param int $n Le numéro du bit à modifier (commence à 1).
+ * @param bool $value La nouvelle valeur du bit.
+ * @return int Le nombre transformé.
+ */
+function setBit($nombre, $n, $value) {
+    if(getBit($nombre, $n) != $value) {
+        if($value) {
+            return $nombre + pow(2, $n-1);
+        }
+        else {
+            return $nombre - pow(2, $n-1);
         }
     }
-    /* Si pas de connexion, on regarde l'autorisation des invités */
-    elseif($f3->exists('invite.' . $page) AND $f3->get('invite.' . $page))
-        return 1;
-    else
-        return 0;
 }
 
-function afficherPage($f3, $page) {
-        /* si utilisateur connecté, on vérifie qu'il a bien les droits */
-    if(verifierPermission($f3, $page)) {
-        $f3->set('page', $page);
-        echo Template::instance()->render('templates/cadre.htm');
+function bitSum($n) {
+    $somme = 0;
+    while($n != 0) {
+        if(is_int($n/2)) { // Si n est impair
+            $n--;
+            $somme++;
+        }
+        $n/2; // On décale à droite
+        echo 'n : ' . $n . '<br/>';
     }
-    else {
-        /* Sinon on renvoie la page d'erreur */
-        $f3->set('page', 'templates/forbidden.htm');
-        echo Template::instance()->render('templates/cadre.htm');
-    }
+    return $somme;
+}
+
+/**
+ * Affiche le template demandé dans le template cadre.htm si la permission est accordé.
+ * Sinon affiche une page d'erreur dans le template cadre.htm.
+ * @param string $page La page que l'on souhaite afficher.
+ * @param int $permission La permission nécessaire pour afficher la page.
+ * @param bool $condition Un condition supplémentaire à l'affichage de la page.
+ * @return void
+ */
+function afficherPage($page) {
+    $f3 = Base::instance();
+    $f3->set('page', $page);
+    echo Template::instance()->render('templates/cadre.htm');
 }
 
 // Tronque et rajoute 3 point si la chaîne est de taille > taille_max
@@ -57,7 +73,21 @@ function abreger($chaine, $taille_max) {
     else return $chaine;
 }
 
-function test() {
-    echo '<h2>TEST</h2>';
-    echo ImgMng::getInstance()->estUneImage('files/images/edit.png');
+/**
+ * Abréviation de ConnectedIsAllowed.
+ * Vérifie si l'étudiant connecté à la permission donnée.
+ * @param int $perm La permission à vérifier.
+ * @param bool $invite True si un invité peut accéder à la page
+ * @param mixed $question_ou_sujet Si la personne connecté en est l'auteur, il peut accéder à la page.
+ * @return bool True si l'étudiant connecté est autorisé.
+ */
+function CIA($perm, $invite = 1, $question_ou_sujet = NULL) {
+    $etudiant_connecte = \Membre\Manager::instance()->getConnected();
+    if($etudiant_connecte) {
+        return ($etudiant_connecte->getStatutObject()->getPermissions() & $perm) ||
+               ($question_ou_sujet && $etudiant_connecte->isAuteur($question_ou_sujet));
+    }
+    else {
+        return $invite && (\Statut\Manager::instance()->getInvite()->getPermissions() & $perm);
+    }
 }

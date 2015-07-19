@@ -13,119 +13,149 @@
 -->
 
 <!--Affichage du titre-->
-<check if="{{isset(@PARAMS.id)}}">
+<check if="{{@id_sujet}}">
     <true>
-    <!-- Si il y a un sujet sélectionné, on affiche le nom du sujet. -->
-    <check if="{{@num_question == 0}}">
-        <true>
-        <h2>Ajouter une question</h2>
-        <h4>Sujet n°{{ @id_sujet }}, question n°{{ @num_question_suiv }}</h4>
-        </true>
-        <false>
-        <h2>Modifier une question</h2>
-        <h4>Sujet n°{{ @id_sujet }}, question n°{{ @num_question }}</h4>
-        </false>
-    </check>
+        <!-- Si il y a un sujet sélectionné, on affiche le nom du sujet. -->
+        <check if="{{@edition == 0}}">
+            <true>
+                <h2>Ajouter une question</h2>
+                <h4>Sujet n°{{ @id_sujet }}, question n°{{ @num_question }}</h4>
+            </true>
+            <false>
+                <h2>Modifier la question {{@id_question}} </h2>
+                <h4>Sujet n°{{ @id_sujet }}, question n°{{ @num_question }}</h4>
+            </false>
+        </check>
     </true>
     <false>
     <!-- Si il n'y a pas de sujet sélectionner, un affiche la liste des matières à sélectionner. -->
-    <check if="{{@num_question == 0}}">
-        <true><h2>Proposer une question indépendante</h2></true>
-        <false><h2>Modifier une question indépendante</h2></false>
-    </check>
-    <div class="form-group">
-        <label for="matiere">Matière : </label>
-        <select name="matiere">
-            {{@SESSION.user->matieresSuiviesEnOption(@f3)}}
-        </select>
-    </div>
+        <check if="{{@edition == 0}}">
+            <true><h2>Proposer une question</h2><h4>Indépendante</h4></true>
+            <false><h2>Modifier la question {{@id_question}} </h2><h4>Indépendante</h4></false>
+        </check>
+        <div class="form-group">
+            <label for="matiere">Matière : </label>
+            <select name="matiere" id="matiere" value="1">
+                <repeat group="{{@SESSION.user->getMatieresInArray()}}" key="{{@num_matiere}}" value="{{@matiere}}">
+                    <option value="{{@num_matiere}}"{{(isset(@question) && @question->getMatiere() == @num_matiere)?' selected':''}}>{{@matiere}}</option>
+                </repeat>
+            </select>
+        </div>
     </false>
 </check>
 <p>Vous utilisez actuellement l'éditeur de question avancé. Cliquez sur un champ pour le modifier.</p>
 
 <!-- Affichage de la question -->
 <div class="container-fluid">
-        <!--checkbox pour savoir si cette question marque le début d'un exercice (cf UE biophysique)-->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="checkbox">
+    <!--checkbox pour savoir si cette question marque le début d'un exercice (cf UE biophysique)-->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="checkbox">
+                <label for="exercice">
                     <input type="checkbox" id="exercice"/>Cette question commence un nouvel exercice.
-                </div>
+                </label>
             </div>
         </div>
-        <!--Enonce supérieur-->
-        <div class="row">
-            <div class="col-lg-2 checkbox">
+    </div>
+    <!--Enonce supérieur-->
+    <div class="row">
+        <div class="col-lg-2 checkbox">
+            <label for="enonce_sup_checkbox">
                 <input type="checkbox" id="enonce_sup_checkbox"/> Enoncé sup :
-            </div>
-            <div class="col-lg-10 bouton collapse" onclick="focused_input = 'enonce_sup'" data-toggle="modal" data-target=".modal_ajout" id="enonce_sup_cell">
-                <div class="well" id="enonce_sup">
-                    <check if="{{isset(@question)}}">{{@question.enonce_sup}}</check>
-                </div>
+            </label>
+        </div>
+        <div class="col-lg-10 bouton collapse" onclick="focused_input = 'enonce_sup'" data-toggle="modal" data-target=".modal_ajout" id="enonce_sup_cell">
+            <div class="well" id="enonce_sup">
+                <p><check if="{{isset(@question)}}">{{@question->getEnonce_sup()}}</check></p>
             </div>
         </div>
-        <!--Question-->
-        <div class="row">
-            <div class="col-lg-2">
-                <p><strong>Question : </strong></p>
-            </div>
-            <div class="col-lg-10 bouton well" onclick="focused_input = 'question'" data-toggle="modal" data-target=".modal_ajout" id="question">
-                <check if="{{isset(@question)}}">{{@question.question}}</check>
-            </div>
+    </div>
+    <!--Question-->
+    <div class="row">
+        <div class="col-lg-2">
+            <p><strong>Question : </strong></p>
         </div>
-        <!--Enonce inférieur-->
-        <div class="row">
-            <div class="col-lg-2 checkbox">
+        <div class="col-lg-10 bouton well" onclick="focused_input = 'question'" data-toggle="modal" data-target=".modal_ajout" id="question">
+            <p><check if="{{isset(@question)}}">{{@question->getQuestion()}}</check></p>
+        </div>
+    </div>
+    <!--Enonce inférieur-->
+    <div class="row">
+        <div class="col-lg-2 checkbox">
+            <label for="enonce_inf_checkbox">
                 <input type="checkbox" id="enonce_inf_checkbox"/> Enoncé inf : 
-            </div>
-            <div class="col-lg-10 bouton collapse" onclick="focused_input = 'enonce_inf'" data-toggle="modal" data-target=".modal_ajout" id="enonce_inf_cell">
-                <div class="well" id="enonce_inf">
-                    <check if="{{isset(@question)}}">{{@question.enonce_inf}}</check>
-                </div>
+            </label>
+        </div>
+        <div class="col-lg-10 bouton collapse" onclick="focused_input = 'enonce_inf'" data-toggle="modal" data-target=".modal_ajout" id="enonce_inf_cell">
+            <div class="well" id="enonce_inf">
+                <p><check if="{{isset(@question)}}">{{@question->getEnonce_inf()}}</check></p>
             </div>
         </div>
-        <!--Ajout d'une image-->
-        <div class="row">
-            <div class="col-lg-2"><p>Image : </p></div>
-            <div class="col-lg-10">
-                <!--Formulaire d'ajout d'image-->
-                <div class="container-fluid collapse" id="image_form">
-                    <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
-                        <div class="form-group">
-                            <label for="image_file">Uploader une image : </label>
-                            <input type="file" id="image_file" name="image_file" />
-                        </div>
-                        <input name="submit" type="submit" value="Uploader" />
-                    </form>
-                </div>
-                <!--Affichage de l'image-->
-                <div class="container-fluid collapse" id="image_cell">
-                    <div class="input-group">
-                        <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
-                        <label for="largeur_image">Largeur :</label>
-                        <input type="text" name="largeur_image" id="largeur_image" />
-                        <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
+    </div>
+    <!--Ajout d'une image-->
+    <div class="row">
+        <div class="col-lg-2"><p>Image : </p></div>
+        <div class="col-lg-10">
+            <!--Formulaire d'ajout d'image-->
+            <div class="container-fluid collapse" id="image_form">
+                <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
+                    <div class="form-group">
+                        <label for="image_file">Uploader une image : </label>
+                        <input type="file" id="image_file" name="image_file" />
                     </div>
-                    <check if="{{isset(@question) && @question.image != ''}}">
-                        <true><img id="image" src="{{@root}}files/images/{{@question.image}}" /></true>
-                        <false><img id="image" src="" /></false>
-                    </check>
-                    
+                    <input name="submit" type="submit" value="Uploader" />
+                </form>
+            </div>
+            <!--Affichage de l'image-->
+            <div class="container-fluid collapse" id="image_cell">
+                <div class="input-group">
+                    <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
+                    <label for="largeur_image">Largeur :</label>
+                    <input type="text" name="largeur_image" id="largeur_image" />
+                    <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
+                </div>
+                <check if="{{isset(@question) && @question->getImage() != ''}}">
+                    <true><img id="image" width="{{@question->getLargeur_image()}}" src="{{@root}}files/images/{{@question->getImage()}}" /></true>
+                    <false><img id="image" src="" /></false>
+                </check>
+
+            </div>
+        </div>
+    </div>
+    <!-- Affichage des 5 items -->
+    <repeat group="{{ array(1,2,3,4,5) }}" value="{{ @num_item }}" >
+        <include href="templates/sujets/ajouter_question_item.htm" with="vrai='checked', faux=''" />
+                 <!-- On passe les différentes variables nécéssaire au rendu de l'item -->
+                 
+    </repeat>
+</div>
+<button class="btn btn-default" type="submit" onclick="enregistrer()">Enregistrer</button>
+
+<!--Fenêtre de choix après enregistrement-->
+<div class="modal fade" id="modal_save" role="dialog" aria-labelledby="enregistrement" aria-hidden="true" data-backdrop='false'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Enregistrement de la question.</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <p>Yes ! La question a été correctement enregistrée. Que souhaitez vous faire maintenant ?</p>
+                    <ul>
+                        <li><a href="{{@root}}sujets/ajouter_question">Ajouter une autre question indépendante</a></li>
+                        <li><a href="">Continuer à modifier cette question</a></li>
+                        <li><a href="{{@root}}sujets">Aller à la liste des sujets</a></li>
+                        <li><a href="{{@root}}sujets/liste_questions">Aller à la liste des questions</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <!-- Affichage des 5 items -->
-        <repeat group="{{ array(1,2,3,4,5) }}" value="{{ @num_item }}" >
-            <include href="templates/sujets/ajouter_question_item.htm" 
-                     <!-- On passe les différentes variables nécéssaire au rendu de l'item -->
-                     with="item='item'.{{@num_item}},corr='correction'.{{@num_item}}, rep='reponse'.{{@num_item}}, vrai='checked', faux=''" />
-        </repeat>
+    </div>
 </div>
 
-<button class="btn btn-default" type="submit">Enregistrer</button>
-
 <!-- Fenêtre d'ajout d'équation -->
-<div class="modal fade modal_ajout" role="dialog" aria-labelledby="editer-bouton well" aria-hidden="true">
+<div id="modal_ajout" class="modal fade modal_ajout" role="dialog" aria-labelledby="editer-bouton" aria-hidden="true" data-backdrop="false">
     <include href="templates/editor/editor.htm" />
 </div>
 
@@ -136,24 +166,30 @@
     // Focused input contient le champs à modifier lorsqu'on ouvre la popup
     var focused_input;
     
+    // On sélectionne la matière si besoin
+    $('option[value="{{@matiere}}"]').attr('selected', 'selected');
+    
     // On coche les checkbox si nécessaire
     // On ouvre les collapse en parallèle
-    if({{isset(@question)}}) {
-        if({{@question.exercice}})
+    if({{@edition}}) {
+        if('{{@edition && @question->getExercice()}}' != '')
             $('#exercice').attr('checked', 'checked');
-        if('{{@question.enonce_sup}}' != '') {
+        if('{{@edition && strlen(@question->getEnonce_sup())}}' != '') {
             $('#enonce_sup_checkbox').attr('checked', 'checked');
             $('#enonce_sup_cell').collapse();
         }
-        if('{{@question.enonce_inf}}' != '') {
+        if('{{@edition && strlen(@question->getEnonce_inf())}}' != '') {
             $('#enonce_inf_checkbox').attr('checked', 'checked');
-            $('#enonce_inf_cell').collapse();
+            $('#enonce_inf_cell').collapse('show');
         }
-        if('{{@question.image}}' != '')
-            $('#image_cell').collapse();
+        if('{{@edition && strlen(@question->getImage())}}' != '')
+            $('#image_cell').collapse('show');
         else
-            $('#image_form').collapse();
+            $('#image_form').collapse('show');
     }
+    else
+        $('#image_form').collapse('show');
+        
     
     // On programme l'ouverture des collapses quand on coche la checkbox
     $('#enonce_sup_checkbox').on('change', function(e) {
@@ -176,33 +212,49 @@
             toolbar: "undo redo | bold italic | bullist numlist | eqneditor "
     });
     
+    $('#modal_ajout').on('shown.bs.modal', function(e) {
+        tinyMCE.get('editeur').setContent($('#' + focused_input).html());
+        tinyMCE.get('editeur').focus();
+    });
+
     // Enregistrement de la question dans la base de donnée
     function enregistrer() {
+        var data_to_post = {}; // Variable contenant toutes la valeurs des champs à enregistrer
+        
+        data_to_post['id'] = {{@id_question}};
+        data_to_post['id_sujet'] = {{@id_sujet}};
+        data_to_post['matiere'] = $('#matiere').length?$('#matiere').val():0;
+        data_to_post['numero_question'] = {{@num_question}};
+        
+        // champs textes (ils sont tous dans des 'well')
+        $('.well').each(function () {
+            data_to_post[$(this).attr('id')] = $(this).children('p').html();
+        });
+        // champs réponses
+        var reponse = 0;
+        var inc = 0; // inc varie de 0 à 4
+        $('input[type=radio]:checked').each(function() {
+            reponse += $(this).val()*Math.pow(2, inc);
+            inc++;
+        });
+        data_to_post['reponse'] = reponse;
+        // Si des éléments sont décochés, on les met à ''
+        if(!$('#enonce_sup_checkbox').is(':checked')) data_to_post['enonce_sup'] = '';
+        if(!$('#enonce_inf_checkbox').is(':checked')) data_to_post['enonce_inf'] = '';
+        // Autre champs
+        data_to_post['exercice'] = $('#exercice').is(':checked')?1:0;
+        data_to_post['image'] = $('#image').attr('src').split('\\').pop().split('/').pop(); // split et pop permettent de récupérer le nom du fichier
+        data_to_post['largeur_image'] = $('#largeur_image').val();
+
+        /* On envoie les données */
         $.post('{{@root}}ajax/question/save',
         {
-        id_sujet: '{{@id_sujet}}',
-            question: $('#question').val(),
-            item1: $('#item1').val(),
-            correction1: $('#correction1').val(),
-            reponse1: $('input[name=reponse1]:checked').val(), // Ceci permet de récupérer la valeur de la réponse
-            item2: $('#item1').val(),
-            correction2: $('#correction1').val(),
-            reponse2: $('input[name=reponse1]:checked').val(),
-            item3: $('#item1').val(),
-            correction3: $('#correction1').val(),
-            reponse3: $('input[name=reponse1]:checked').val(),
-            item4: $('#item1').val(),
-            correction4: $('#correction1').val(),
-            reponse4: $('input[name=reponse1]:checked').val(),
-            item5: $('#item1').val(),
-            correction5: $('#correction1').val(),
-            reponse5: $('input[name=reponse1]:checked').val()
+            donnees: data_to_post
         },
-            function (data) { // exécutée une fois qu'on a la valeur de retour
-                if (data != '') alert('Erreur : ' + data);
-                    else alert('La question à bien été enregistrée')
-            }
-        );
+        function (data) { // exécutée une fois qu'on a la valeur de retour
+            if (data != '') alert('Erreur : ' + data);
+            else $('#modal_save').modal('show');
+        });
     }
     
     // Upload de l'image en utilisant le plugin jquery 'form'
@@ -219,7 +271,7 @@
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert('Une erreur est survenue lors de la requête ajax. Voici le contenu de la réponse : \n' + JSON.parse(xhr.responseText));
+                alert('Une erreur est survenue lors de la requête ajax. Voici le contenu de la réponse : \n' + xhr.responseText);
             }
         })
     });
@@ -232,6 +284,8 @@
             },
             function(data) {
                 $('#image').attr('src', '');
+                if(data != '')
+                    alert('Erreur : ' + data);
             }
         )
         $('#image_cell').collapse('hide');

@@ -1,5 +1,33 @@
 <h2>{{@titre}}</h2>
 
+<form class="form-inline">
+    <div class="form-group">
+        <label for="matiere">Matière : </label>
+        <select name="matiere" id="matiere" value="1">
+            <option value="0">Toutes</option>
+            <repeat group="{{@SESSION.user->getMatieresInArray()}}" key="{{@num_matiere}}" value="{{@matiere}}">
+                <option value="{{@num_matiere}}">{{@matiere}}</option>
+            </repeat>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="auteur">Auteur : </label>
+        <select name="auteur" id="auteur">
+            <option value="tous">Tous</option>
+            <option value="moi">Moi</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="sujet">Sujet : </label>
+        <select name="sujet" id="sujet" value="1">
+            <option value="toutes">Toutes</option>
+            <option value="seules">Seules</option>
+            <option value="rattachees">Rattachées</option>
+            <option value="banquees">Banquées</option>
+        </select>
+    </div>
+</form>
+
 <table class="table table-hover">
     <tr>
         <th>Numéro</th>
@@ -7,19 +35,43 @@
         <th>Matière</th>
         <th>Numéro sujet</th>
         <th>Question</th>
-        <th>Date</th>
+        <th>Banquer</th>
         <th>Supprimer</th>
     </tr>
     <repeat group="{{ @questions }}" value="{{ @champs }}">
-        <check if="{{ @champs.matiere == @matiereAffichee or @matiereAffichee == 'all' }}">
-            <tr class="bouton" onclick="modifierQuestion({{@champs.sujet_id}},{{@champs.id}})">
-                <td>{{ @champs.id }}</td>
-                <td>{{ @SESSION.user->getPseudo(@f3, @champs.auteurs) }}</td>
-                <td>{{ @matieres[@champs.matiere] }}</td>
-                <td>{{ @champs.sujet_id }}</td>
-                <td>{{ abreger(@champs.question, 50) }}</td>
-                <td>{{ @champs.date }}</td>
-                <td><button class="btn btn-info" onclick="supprimerQuestion({{@champs.id}})">Supprimer</button></td>
+        <check if="{{ @champs->getMatiere() == @matiereAffichee or @matiereAffichee == 'all' }}">
+            <!--TR-->
+            <check if="{{@champs->getId_sujet() > 0}}"><true><tr data-id="{{@champs->getId()}}" class="success"></true></check>
+            <check if="{{@champs->getId_sujet() == 0}}"><true><tr data-id="{{@champs->getId()}}"></true></check>
+            <check if="{{@champs->getId_sujet() < 0}}"><true><tr data-id="{{@champs->getId()}}" class="info"></true></check>
+                
+                <!--TD id-->
+                <td><a href="{{@root}}sujets/question/{{ @champs->getId() }}">{{ @champs->getId() }}</a></td>
+                
+                <!--TD auteur-->
+                <td data-auteur="{{@champs->getAuteurs()}}"><a href="{{@root}}profil/{{ @champs->getAuteurs() }}">{{ \Membre\Manager::instance()->getFromId(@champs->getAuteurs())->getPseudo() }}</a></td>
+                
+                <!--TD matiere-->
+                <td data-matiere="{{@champs->getMatiere()}}">{{ @matieres[@champs->getMatiere()] }}</td>
+                
+                <!--TD sujet-->
+                <td data-sujet="{{@champs->getId_sujet()}}">
+                    <check if="{{ @champs->getId_sujet() > 0}}"><a href="{{@root}}sujets/{{ @champs->getId_sujet() }}">{{ @champs->getId_sujet() }}</a></check>
+                    <check if="{{ @champs->getId_sujet() == 0}}">Seule</check>
+                    <check if="{{ @champs->getId_sujet() < 0}}">Banque</check>
+                </td>
+                
+                <!--TD question abrégée-->
+                <td><a href="{{@root}}sujets/question/{{ @champs->getId() }}">{{ abreger(@champs->getQuestion(), 50) }}</a></td>
+                
+                <!--TD bouton banquer-->
+                <td>
+                <check if="{{@champs->getId_sujet() == 0}}"><button class="btn btn-info" onclick="banquer({{@champs->getId()}})">Banquer</button></check>
+                <check if="{{@champs->getId_sujet() < 0}}"><button class="btn btn-info" onclick="debanquer({{@champs->getId()}})">Débanquer</button></check>
+                </td>
+                
+                <!--TD bouton supprimer-->
+                <td><button class="btn btn-info" onclick="supprimerQuestion({{@champs->getId()}})">Supprimer</button></td>
             </tr>
         </check>
     </repeat>
@@ -34,19 +86,70 @@
                     if(data != '')
                         alert('Erreur : ' + data);
                     else
-                        document.location = '{{@root}}sujets/liste_questions/';
+                        $('tr[data-id="' + id + '"]').remove();
             });
         }
     }
     
-    function modifierQuestion(id_sujet, id_question) {
-        if(id_sujet == 0) {
-            //Si la question n'est pas rattaché à un sujet, on affiche la question
-            document.location = '{{@root}}sujets/question/'+id_question+'/';
-        }
-        else {
-            //Si la question est rattaché à un sujet, on affiche le sujet
-            document.location = '{{@root}}sujets/'+id_sujet+'/';
+    /*
+     * Rajoute une question à la banque de QCM (passe son id_sujet à -1)
+     */
+    function banquer (id) {
+        var confirmation = confirm("Voulez vous vraiment mettre la question n°" + id + " dans la banque de QCM ?");
+        if(confirmation) {
+            $.post('{{@root}}ajax/question/banquer',
+                {question: id},
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '';
+            });
         }
     }
+    
+    function debanquer (id) {
+        var confirmation = confirm("Voulez vous vraiment retirer la question n°" + id + " de la banque de QCM ?");
+        if(confirmation) {
+            $.post('{{@root}}ajax/question/debanquer',
+                {question: id},
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '';
+            });
+        }
+    }
+    
+    /* Fonction qui affiches ou cache les questions en fonctions des options des trois sélecteurs */
+    function afficher_question() {
+        matiere = $('#matiere').val();
+        auteur = $('#auteur').val();
+        sujet = $('#sujet').val();
+        
+        /* On boucle sur toutes les lignes (tr) */
+        $('tr').each(function() {
+            matiere_cour = $(this).children('td[data-matiere]').attr('data-matiere'); // champ matiere de la question traitée
+            auteur_cour = $(this).children('td[data-auteur]').attr('data-auteur'); // champ auteurs de la question traitée
+            sujet_cour = $(this).children('td[data-sujet]').attr('data-sujet'); // champ id_sujet de la question traitée
+            if(     !$(this).attr('data-id') || // On élimine affiche la première ligne
+                    ((matiere == 0 || matiere_cour == matiere) &&
+                    (auteur == 'tous' || auteur_cour == '{{@SESSION.user->getId()}}') &&
+                    (sujet == 'toutes' || (sujet == 'seules' && sujet_cour == '0') || (sujet == 'rattachees' && sujet_cour > '0') || (sujet == 'banquees' && sujet_cour < '0')))
+            )
+            {
+                $(this).show();
+            }
+            else
+                $(this).hide();
+        })
+    }
+    
+    afficher_question();
+    
+    /* On crée un évènement dès qu'on change la valeur d'un des sélecteurs */
+    $('#matiere, #auteur, #sujet').on('change', function(e) {
+        afficher_question();
+    });
 </script>

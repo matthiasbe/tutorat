@@ -1,0 +1,71 @@
+<h2>Edition des rôles</h2>
+<p>Permission non modifiables:<br/>
+Un étudiant peut voir son propre profil, voir ses résultats, voir ses questions fausses.<br/>
+De même un tuteur ayant créér un sujet peut le voir, le modifier et le supprimer.<br/>
+idem dans la cas d'une question, mis à part que ces droits sont perdus si elle est rattachée à un sujet.</p>
+<p>Tout le monde peut accéder à la page d'accueil.<br/>
+Seules les personnes ayant le droit de créer un sujet peuvent voir leurs sujets. A moins qu'elles aient le droit de 
+voir les sujet de tout le monde.</p>
+<p>L'auteur d'un sujet peut ajouter des questions au sujet.</p>
+
+<button class="btn btn-default" onclick="ajouter()">Ajouter un rôle</button>
+<table class="table table-hover">
+    <tr>
+        <th>Numero</th>
+        <th>Description</th>
+        <repeat group="{{\Statut\Manager::instance()->getAll()}}" value="{{@statut}}">
+            <td>{{@statut->getNom()}}</td>
+        </repeat>
+    </tr>
+    <repeat group="{{range(0, NBR_PERMISSIONS-1)}}" key="{{@key}}" value="{{@num_permission}}">
+        <tr>
+            <td>{{@num_permission+1}}</td>
+            <td>{{\Statut\Manager::instance()->getPermDescription(pow(2,@num_permission))}}</td>
+            <repeat group="{{\Statut\Manager::instance()->getAll()}}" value="{{@statut}}">
+                <td><input type="checkbox" data-statut="{{@statut->getId()}}" data-perm="{{@num_permission + 1}}" {{@statut->getPermission(@num_permission + 1)?'checked':''}} /></td>
+            </repeat>
+        </tr>
+    </repeat>
+</table>
+
+<script type="text/javascript">
+    // On ajoute un event qui met a jour le statut à chaque fois qu'on coche/décoche un case
+    $('input[type=checkbox]').on('change', function(e) {
+        statut = $(this).attr('data-statut');
+        perm = $(this).attr('data-perm');
+        value = $(this).is(':checked');
+        
+        $.post('{{@root}}ajax/statut/edit',
+            {
+                statut: statut,
+                permission: perm,
+                value: value,
+            },
+            function (data) {
+                if(data != '') {
+                    alert('Erreur : ' + data);
+                    document.location.reload();
+                }
+        });
+    });
+    
+    /**
+     * Ouvre une fenêtre prompt pour récupérer un nom de rôle, puis enregistre le rôle dans la BDD
+     * @returns {undefined}
+     */
+    function ajouter() {
+        nom = prompt('Veuillez indiquer un nom pour le rôle');
+        $.post('{{@root}}ajax/statut/add',
+            {
+                nom: nom,
+            },
+            function (data) {
+                if(data != '') {
+                    $('body').html('Erreur : ' + data);
+                }
+                else {
+                    document.location.reload();
+                }
+        });
+    }
+</script>

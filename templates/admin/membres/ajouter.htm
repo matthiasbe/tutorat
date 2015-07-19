@@ -19,6 +19,22 @@
     </div>
     <div class="row form-group">
         <div class="col-lg-2">
+            <label for="nom">Nom : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="nom" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="prenom">Prénom : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="prenom" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
             <label for="email">Email : </label>
         </div>
         <div class="col-lg-10">
@@ -35,12 +51,47 @@
     </div>
     <div class="row form-group">
         <div class="col-lg-2">
+            <label for="portable">Site : </label>
+        </div>
+        <div class="col-lg-10">
+            <select name="site">
+                <option value="Châtenay">Châtenay</option>
+                <option value="Orsay">Orsay</option>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Situation : </label>
+        </div>
+        <div class="col-lg-10">
+            <select name="situation">
+                <option value="Primant">Primant</option>
+                <option value="Doublant">Doublant</option>
+                <option value="Triplant">Triplant</option>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Statut : </label>
+        </div>
+        <div class="col-lg-10">
+            <select name="statut">
+                <repeat group="{{\Statut\Manager::instance()->getAll()}}" key="{{@num}}" value="{{@statut}}">
+                    <option value="{{@num}}">{{@statut->getNom()}}</option>
+                </repeat>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
             <label for="portable">Matières attitrées</label>
         </div>
         <div class="col-lg-10">
         <repeat group="{{ @matieres }}" key="{{@key}}" value="{{@value}}"">
             <div class="checkbox">
-                <label><input type="checkbox" name="matiere{{@key}}" class=""/>{{@value}}</label>
+                <label><input type="checkbox" name="matiere{{@key}}"/>{{@value}}</label>
             </div>
         </repeat>
         </div>

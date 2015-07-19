@@ -13,24 +13,22 @@
         <th>Télécharger</th>
     </tr>
     <repeat group="{{ @result }}" value="{{ @champs }}">
-        <check if="{{ @champs.matiere == @matiereAffichee or @matiereAffichee == 'all' }}">
-            <tr class="bouton" onclick="document.location='{{ @root }}sujets/{{ @champs.id }}'">
-                <td>{{ @champs.id }}</td>
-                <td>{{ @SESSION.user->getPseudo(@f3, @champs.auteurs) }}</td>
-                <td>{{ @matieres[@champs.matiere] }}</td>
-                <td>{{ @champs.numero_cb }}</td>
-                <td>{{ @champs.nombre_questions }}</td>
-                <td>{{ @champs.date }}</td>
-                <td>{{ @champs.notions }}</td>
-                <td><button class="btn btn-info" onclick="supprimerSujet({{@champs.id}})">Supprimer</button></td>
-                <td><a href="{{ @root }}sujets/{{ @champs.id }}/pdf">Downloads</a></td>
-            </tr>
-        </check>
+        <tr>
+            <td><a href="{{@root}}sujets/{{ @champs->getId() }}">{{ @champs->getId() }}</a></td>
+            <td><a href="{{@root}}profil/{{ @champs->getAuteurs() }}">{{ \Membre\Manager::instance()->getFromId(@champs->getAuteurs())->getPseudo() }}</a></td>
+            <td>{{ @matieres[@champs->getMatiere()] }}</td>
+            <td>{{ @champs->getNumero_cb() }}</td>
+            <td>{{ @champs->getNombre_questions() }}</td>
+            <td>{{ @champs->getDate() }}</td>
+            <td>{{ @champs->getNotions() }}</td>
+            <td><button class="btn btn-info" onclick="supprimerSujet({{@champs->getId()}})">Supprimer</button></td>
+            <td><a href="{{ @root }}sujets/{{ @champs->getId() }}/pdf">Downloads</a></td>
+        </tr>
     </repeat>
 </table>
 <script type="text/javascript">
     function supprimerSujet(id) {
-        var confirmation = confirm("Voulez vous vraiment supprimer le sujet n°" + id);
+        var confirmation = confirm("Voulez vous vraiment supprimer le sujet n°" + id + '?\nSi ce sujet contient des questions, elles seront détachées mais non supprimées.');
         if(confirmation) {
             $.post('{{@root}}ajax/sujet/delete',
                 {id: id},

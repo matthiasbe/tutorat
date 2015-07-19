@@ -1,0 +1,9 @@
+<!--qcms_matieres.htm
+    Affiche la liste des matières, avec un lien vers la page qcms.htm
+    contenant les QCMs de a matière-->
+<h2>Sélectionnez une matière</h2>
+<ul>
+    <repeat group="{{@matieres}}" key="{{@key}}" value="{{@matiere}}">
+        <li><a href="{{@root}}qcms/{{@key}}">{{@matiere}}</a></li>
+    </repeat>
+</ul>

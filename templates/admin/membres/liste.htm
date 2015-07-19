@@ -6,9 +6,9 @@
     </tr>
     <repeat group="{{ @membres }}" value="{{ @champs }}">
         <tr>
-            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs.id }}'">{{ @champs.id }}</td>
-            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs.id }}'">{{ @champs.pseudo }}</td>
-            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs.id }}'">{{ @nom_statuts[@champs.statut] }}</td>
+            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">{{ @champs->getId()}}</td>
+            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">{{ @champs->getPseudo() }}</td>
+            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">{{ @champs->getStatutObject()->getNom() }}</td>
         </tr>
     </repeat>
 </table>

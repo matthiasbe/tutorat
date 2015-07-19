@@ -1,0 +1,234 @@
+<h2>Mon espace membre</h2>
+<ul class="nav nav-tabs">
+    <li class="active">Profil</li>
+    <li>Résultats</li>
+</ul>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2"><p>Nom d'utilisateur : </p></div>
+        <div class="col-lg-10">
+            <p>
+                <span id="pseudo">{{@membre->getPseudo()}}</span>
+                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'pseudo')}}">
+                    <img class="bouton" onclick="modifier('pseudo')" src="{{@root}}files/images/edit.png"/>
+                </check>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Statut : </p></div>
+        <div class="col-lg-10">
+            <p>
+                {{@membre->getStatutObject()->getNom()}}
+                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'statut')}}">
+                    <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_statut"/>
+                </check>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Nom : </p></div>
+        <div class="col-lg-10"><p>{{@membre->getNom()}} {{@afficherBoutonModifier('nom')}}</p></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Prénom : </p></div>
+        <div class="col-lg-10"><p>{{@membre->getPrenom()}} {{@afficherBoutonModifier('prenom')}}</p></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Situation : </p></div>
+        <div class="col-lg-10">
+            <p>
+                {{@membre->getSituation()}} 
+                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'situation')}}">
+                    <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_situation"/>
+                </check>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Site : </p></div>
+        <div class="col-lg-10">
+            <p>
+                {{@membre->getSite()}}
+                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'site')}}">
+                    <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_site"/>
+                </check>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Email : </p></div>
+        <div class="col-lg-10"><p>{{@membre->getEmail()}} {{@afficherBoutonModifier('email')}}</p></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"><p>Téléphone : </p></div>
+        <div class="col-lg-10"><p>{{@membre->getPortable()}} {{@afficherBoutonModifier('portable')}}</p></div>
+    </div>
+    
+    <check if="{{CIA(DELETE_MEMBRE, 0)}}">
+        <div class="row">
+            <div class="col-lg-2"><p>Supprimer : </p></div>
+            <div class="col-lg-10"><p><button onclick="supprimerMembre()" class="btn btn-info">Supprimer le membre</button></p></div>
+        </div>
+    </check>
+    <div class="row">
+        <div class="col-lg-2">
+            <p>
+                Matières attitrées :
+                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
+                    <img class="bouton" src="{{@root}}files/images/add.png" alt="Modifier" data-toggle="modal" data-target=".modal_matiere"/>
+                </check>
+            </p>
+        </div>
+        <div class="col-lg-10">
+            <ul class="list-unstyled">
+                <repeat group="{{@membre->getMatieresInArray()}}" key="{{@num}}" value="{{@matiere}}">
+                    <li>
+                        {{@matiere}}
+                        <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
+                            <img class="bouton" onclick="supprimerMatiere({{@num}})" src="{{@root}}files/images/delete.png" alt="Supprimer" />
+                        </check>
+                    </li>
+                </repeat>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Fenêtre de modification de statut -->
+<div class="modal fade modal_statut" role="dialog" aria-labelledby="edit-site" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modification du champ : statut</h4>
+            </div>
+            <div class="modal-body">
+                <select name="statut" id="statut">
+                    <repeat group="{{\Statut\Manager::instance()->getAll()}}" key="{{@cle}}" value="{{@statut}}">
+                        <option value="{{@statut->getId()}}">{{@statut->getNom()}}</option>
+                    </repeat>
+                </select>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button class="btn btn-primary" onclick="MAJ('statut', $('#statut').val())">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fenetre de modification de la situation -->
+<div class="modal fade modal_situation" role="dialog" aria-labelledby="edit-situation" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modification du champ : situation</h4>
+            </div>
+            <div class="modal-body">
+                <select name="situation" id="situation">
+                    <option>Primant</option>
+                    <option>Doublant</option>
+                    <option>Triplant</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button class="btn btn-primary" onclick="MAJ('situation', $('#situation').val())">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fenetre de modification du site -->
+<div class="modal fade modal_site" role="dialog" aria-labelledby="edit-site" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modification du champ : site</h4>
+            </div>
+            <div class="modal-body">
+                <select name="site" id="site">
+                    <option>Châtenay</option>
+                    <option>Orsay</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button class="btn btn-primary" onclick="MAJ('site', $('#site').val())">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fenêtre d'ajout de matière -->
+<div class="modal fade modal_matiere" role="dialog" aria-labelledby="edit-site" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Ajout d'une matière</h4>
+            </div>
+            <div class="modal-body">
+                <select name="matiere" id="matiere">
+                    <repeat group="{{@membre->getMatieresNonSuiviesInArray()}}" key="{{@num_matiere}}" value="{{@matiere}}">
+                        <option value="{{@num_matiere}}">{{@matiere}}</option>
+                    </repeat>
+                </select>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+              <button class="btn btn-primary" onclick="MAJ('matieres', {{@membre->getMatieres()}} + Math.pow(2, $('#matiere').val()-1))">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+</style>
+<script type="text/javascript">
+    
+    function modifier(champ) {
+        modif = window.prompt('Modification du champ : ' + champ, $('#' + champ).html());
+
+        // Si l'utilisateur annule, on arrête a procédure
+        if(modif == null) return 0;
+
+        MAJ(champ, modif);
+    }
+    
+    function MAJ(champ, nouvelle_valeur) {
+        $.post('{{@root}}ajax/membre/edit',
+            {
+                id: {{@membre->getId()}},
+                champ: champ,
+                valeur: nouvelle_valeur
+            },
+            function (data) {
+                if(data != '')
+                    alert('Erreur : ' + data);
+                else
+                    document.location.reload();
+        });
+    }
+    
+    function supprimerMatiere(num) {
+        MAJ('matieres', {{@membre->getMatieres()}}-Math.pow(2,num-1));
+    }
+    
+    function supprimerMembre() {
+        if(window.confirm('Êtes-vous sûr de vouloir supprimer le membre suivant : {{@membre->getPseudo()}}')) {
+            $.post('{{@root}}ajax/membre/delete',
+                {
+                    id: {{@membre->getId()}}
+                },
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location = '{{@root}}admin/membres/';
+            });
+        }
+    }
+</script>

@@ -1,30 +1,21 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div id="navbar">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ @root }}">Accueil</a></li>
-                <li><a href="{{ @root }}forum">Forum</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ @root }}admin/membres">Liste des membres</a></li>
-                        <li><a href="{{ @root }}admin/membres/ajouter">Ajouter des membres</a></li>
-                        <li><a href="{{ @root }}admin/permissions">Permissions</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tuteur <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{@root}}sujets">Liste des sujets</a></li>
-                        <li><a href="{{ @root }}sujets/ajouter" >Créer un sujet</a></li>
-                        <li><a href="{{ @root }}sujets/mes_sujets" >Mes sujets</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{{@root}}sujets/liste_questions">Liste des questions</a></li>
-                        <li><a href="{{ @root }}sujets/ajouter_question" >Proposer une question</a></li>
-                        <li><a href="{{ @root }}sujets/mes_questions" >Mes questions</a></li>
-                    </ul>
-                </li>
-            </ul>
+<div class="navbar-header">
+    <a href="{{ @root }}" class="navbar-brand">Bienvenue sur le site du tutorat !</a>
+</div>
+<check if="{{isset(@SESSION.user)}}">
+    <false>
+        <div class="navbar-form navbar-right inline-form" role="connexion">
+            <form method="post" action="{{@root}}connexion?v={{@SERVER.REQUEST_URI}}">
+                <input type="text" class="form-control" placeholder="Identifiant" name="pseudo"/>
+                <input type="password" class="form-control" placeholder="Mot de passe" name="mdp"/>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
         </div>
-    </div>
-</nav>
+    </false>
+    <true>
+            <ul class="nav navbar-top-links navbar-right">
+                {{@SESSION.user->getPseudo()}}
+                <li><a href="{{@root}}profil/{{@SESSION.user->getId()}}"><i class="fa fa-user fa-fw"></i></a><li>
+                <li><a href="{{@root}}deconnexion?v={{@SERVER.REQUEST_URI}}"><i class="fa fa-chain-broken fa-fw"></i></a></li>
+            </ul>
+    </true>
+</check>

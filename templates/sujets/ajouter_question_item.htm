@@ -14,8 +14,8 @@
             <div class="col-lg-3">
                 <p><strong>Item {{ @num_item }} : </strong></p>
             </div>
-            <div onclick="focused_input='{{@item}}'" data-toggle="modal" data-target=".modal_ajout" class="col-lg-9 bouton well" id="{{@item}}">
-                <check if="{{isset(@question)}}">{{@question[@item]}}</check>
+            <div onclick="focused_input='item{{@num_item}}'" data-toggle="modal" data-target=".modal_ajout" class="col-lg-9 bouton well" id="item{{@num_item}}">
+                <p><check if="{{isset(@question)}}">{{@question->getItem(@num_item)}}</check></p>
             </div>
         </div>
         <!--Affichage de la correction-->
@@ -23,20 +23,20 @@
             <div class="col-lg-3">
                 <p><strong>Correction {{ @num_item }} : </strong></p>
             </div>
-            <div onclick="focused_input='{{@corr}}'" data-toggle="modal" data-target=".modal_ajout" class="col-lg-9 bouton well" id="{{@corr}}">
-                <check if="{{isset(@question)}}">{{@question[@corr]}}</check>
+            <div onclick="focused_input='correction{{@num_item}}'" data-toggle="modal" data-target=".modal_ajout" class="col-lg-9 bouton well" id="correction{{@num_item}}">
+                <p><check if="{{isset(@question)}}">{{@question->getCorrection(@num_item)}}</check></p>
             </div>
         </div>
     </div>
     <!--
-        On a affecté deux variables en fonction des données de la BDD: (cf include de ajouter_question_item)
+        On a affecté deux variables : (cf include de ajouter_question_item)
         @vrai : 'checked'
         @faux : ''
     
         On les échange si la question est fausse :
     -->
     <check if="{{isset(@question)}}">
-        <check if="{{!getBit(@question['reponse'], @num_item)}}">
+        <check if="{{!@question->getReponse(@num_item)}}">
             <set vrai=""/>
             <set faux="checked"/>
         </check>
@@ -46,12 +46,12 @@
     <div class="col-lg-2">
         <div class="radio">
             <label>
-                <input {{@vrai}} type="radio" name="{{@rep}}" id="{{@rep}}1" value="1"/> Vrai
+                <input {{@vrai}} type="radio" name="reponse{{@num_item}}" id="reponse{{@num_item}}1" value="1"/> Vrai
             </label>
         </div>
         <div class="radio">
             <label>
-                <input {{@faux}} type="radio" name="{{@rep}}" id="{{@rep}}0" value="0"/> Faux
+                <input {{@faux}} type="radio" name="reponse{{@num_item}}" id="reponse{{@num_item}}0" value="0"/> Faux
             </label>
         </div>
     </div>

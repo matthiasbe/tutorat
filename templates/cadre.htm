@@ -1,36 +1,63 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="en">
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-    <title>Tutorat Médecine Kremlin-Bicêtre</title>
-    <link rel="stylesheet" href="{{ @root }}css/bootstrap.min.css">
-    <link href="{{ @root }}css/simple-sidebar.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ @root }}css/design.css" />
+
     <meta charset="utf-8">
-        
-    <!-- Interdit l'utilisation du mode de comptabilité IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!--Affichage sur les naviguateurs mobiles-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Tutorat Kremlin-Bicêtre</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{@root}}bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="{{@root}}bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="{{@root}}css/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{@root}}css/sb-admin-2.css" rel="stylesheet">
+    <link href="{{@root}}css/design.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="{{@root}}bower_components/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{{@root}}bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--    [if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
     
-<body>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<body style="background-color: white">
+    <script src="{{ @root }}js/jquery.js"></script>
+    <script src="{{ @root }}js/jquery-ui.min.js"></script>
     <script src="{{ @root }}js/bootstrap.min.js"></script>
-    <div class="container">
-        <div class="row">
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation">
             <include href="templates/menu.htm" />
+            <include href="templates/sidebar.htm" />
+        </nav>
+        <div id="page-wrapper" style="margin-top: -20px; padding-top: 20px">
+            <include href="{{ @page }}" />
         </div>
-        <div class="row">
-            <div class="col-md-3 sidebar">
-                <include href="templates/sidebar.htm" />
-            </div>
 
-            <div class="col-md-9">
-                <include href="{{ @page }}" />
-            </div>
-        </div>
     </div>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="{{@root}}bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{{@root}}dist/js/sb-admin-2.js"></script>
 </body>
 </html>

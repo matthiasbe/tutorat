@@ -1,37 +1,123 @@
-<div class="sidebar-nav">
-    <div class="navbar navbar-default" role="connexion">
-        <check if="{{isset(@SESSION.user)}}">
-            <false>
-                <form method="post" action="{{@root}}connexion">
-                    <input type="text" class="form-control" placeholder="Identifiant" name="pseudo"/>
-                    <input type="password" class="form-control" placeholder="Mot de passe" name="mdp"/>
-                    <button type="submit" class="btn">Se connecter</button>
-                </form>
-            </false>
-            <true>
-            <p>Bonjour, <span class="nom_utilisateur_sidebar">{{@SESSION.user->pseudo}}</span></p>
-            <p><a href="{{@root}}profil/{{@SESSION.user->id}}">Mon profil</a></p>
-            <p><a href="{{@root}}deconnexion">Se déconnecter</a></p>
-            </true>
-        </check>
-    </div>
-    <div class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-            <span class="sr-only">Navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-        <div class="navbar-collapse collapse sidebar-navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ @root }}calendrier" {{ @page=='calendrier'?'class="active"':'' }}>Calendrier</a></li>
-                <li><a href="{{ @root }}sujets">Sujets/Corrigés</a></li>
-                <li><a href="{{ @root }}annales">Annales</a></li>
-                <li><a href="{{ @root }}qcms">Banque de QCM</a></li>
-                <li><a href="{{ @root }}statistiques">Statistiques</a></li>
-            </ul>
-        </div>
+<div class="navbar-default sidebar">
+    <div class="sidebar-nav navbar-collapse" role="navigation">
+        <ul class="nav" id="side-menu">
+            <li class="disabled">
+                <!--<a href="{{ @root }}calendrier">-->
+                <a href="#">
+                    <i class="fa fa-calendar fa-fw"></i> Calendrier
+                </a>
+            </li>
+            <li>
+                <a href="{{ @root }}archives">
+                    <i class="fa fa-folder-open-o fa-fw"></i> Sujets/Corrigés
+                </a>
+            </li>
+            <li class="disabled">
+                <!--<a href="{{ @root }}annales">-->
+                <a href="#">
+                    <i class="fa fa-folder-open-o fa-fw"></i> Annales
+                </a>
+            </li>
+            <li>
+                <a href="{{ @root }}qcms">
+                    <i class="fa fa-folder-open-o fa-fw"></i> Banque de QCM
+                </a>
+            </li>
+            <li class="disabled">
+                <!--<a href="{{ @root }}statistiques">-->
+                <a href="#">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Statistiques
+                </a>
+            </li>
+            <li class="disabled">
+                <a href="#">
+                    <i class="fa fa-group fa-fw"></i> Forum
+                </a>
+            </li>
+            <check if="{{CIA(SEE_SUJETS | ADD_SUJET | SEE_QUESTIONS | ADD_QUESTION)}}">
+                <li>
+                    <a href="#">Création<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <check if="{{CIA(SEE_SUJETS)}}">
+                            <li>
+                                <a href="{{@root}}sujets">
+                                    Liste des sujets
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(ADD_SUJET)}}">
+                            <li>
+                                <a href="{{ @root }}sujets/ajouter">
+                                    Créer un sujet
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(ADD_SUJET) && !CIA(SEE_SUJETS)}}">
+                            <li>
+                                <a href="{{ @root }}sujets/mes_sujets">
+                                    Mes sujets
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(SEE_QUESTIONS)}}">
+                            <li>
+                                <a href="{{@root}}sujets/liste_questions">
+                                    Liste des questions
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(ADD_QUESTION)}}">
+                            <li>
+                                <a href="{{ @root }}sujets/ajouter_question">
+                                    Proposer une question
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(ADD_QUESTION) && !CIA(SEE_QUESTIONS)}}">
+                            <li>
+                                <a href="{{ @root }}sujets/mes_questions">
+                                    Mes questions
+                                </a>
+                            </li>
+                        </check>
+                    </ul>
+                </li>
+            </check>
+            <check if="{{CIA(SEE_MEMBRES | ADD_MEMBRE | UPLOAD_RESULTS | EDIT_PERMISSIONS)}}">
+                <li>
+                    <a href="#">Administration<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <check if="{{CIA(SEE_MEMBRES)}}">
+                            <li>
+                                <a href="{{ @root }}admin/membres">
+                                    Liste des membres
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(ADD_MEMBRE)}}">
+                            <li>
+                                <a href="{{ @root }}admin/membres/ajouter">
+                                    Ajouter des membres
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(UPLOAD_RESULTS)}}">
+                            <li>
+                                <a href="{{ @root }}upload_results">
+                                    Ajouter des résultats
+                                </a>
+                            </li>
+                        </check>
+                        <check if="{{CIA(EDIT_PERMISSIONS)}}">
+                            <li>
+                                <a href="{{ @root }}admin/permissions">
+                                    Permissions
+                                </a>
+                            </li>
+                        </check>
+                    </ul>
+                </li>
+            </check>
+        </ul>
     </div>
 </div>

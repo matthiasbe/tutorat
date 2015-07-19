@@ -1,0 +1,14 @@
+<exclude>
+    resultats.htm :
+    autre onglet de la page de profil
+    affiche les résultats du membre au différents sujets
+</exclude>
+
+<h2>Mes résultats</h2>
+
+<repeat group="{{@resultats}}" value="{{@res}}">
+    Concours blanc {{@res->getSujet()->getNumero_cb()}}<br/>
+    Matiere : {{@matieres[@res->getSujet()->getMatiere()]}}<br/>
+    Note : {{@res->getNote()}}<br/>
+    <p><a href="{{@root}}erreurs/{{$res->getSujet()->getId()}}">Voir mes questions fausses</a></p>
+</repeat>

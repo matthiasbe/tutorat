@@ -1,26 +1,37 @@
 <?php
 
 class ImgMng {
-    protected $folder;
-    protected static $instance;
-    protected $img_extensions = array('jpg', 'jpeg', 'png');
+    private $folder;
+    private $folder_without_root;
+    private static $instance;
+    private $img_extensions = array('jpg', 'jpeg');
     const MAX_SIZE = 2000000;
 
-    protected function construct__() {
-        $this->folder = Base::instance()->get('UPLOAD');
+    public function __construct() {
+        $f3 = Base::instance();
+        $this->folder = $f3->get('root') . $f3->get('UPLOADS');
+        $this->folder_without_root = $f3->get('UPLOADS');
+        if(!isset(self::$instance)) {
+            self::$instance = $this;
+        }
     }
     
     public static function getInstance() {
         if(!isset(self::$instance)) {
-            self::$instance = new ImgMng();
+            self::$instance = new self();
         }
         return self::$instance;
     }
     
-    /* APPELE VIA AJAX
-     * réception d'une image via ajaxForm et stockage dans le dossier
+    public function getFolder() {
+        return $this->folder;
+    }
+    
+    /**
+     * APPELE VIA AJAX Réception d'une image via ajaxForm et stockage dans le dossier.
+     * Renvoie en echo (cf ajax) le chemin absolue jusqu'à l'image
      * @access public
-     * renvoie en echo (cf ajax) le chemin absolue jusqu'à l'image
+     * @return void
      */
     public function imageUpload() {
         // Array qui sera serialized puis envoyé comme echo
@@ -68,9 +79,10 @@ class ImgMng {
      * @return void
      */
     public function imageDelete($f3) {
-        $filename = $f3->get('POST.image_path');
+        $path = $f3->get('POST.image_path');
+        $filename = pathinfo($path, PATHINFO_BASENAME);
         if($this->estUneImage($filename)) {
-            unlink('files/images/edit2.png');
+            unlink($this->folder_without_root . $filename);
         }
     }
     
