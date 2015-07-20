@@ -63,8 +63,8 @@ class View {
             afficherPage (PAGE_ERREUR);
     }
     
-    public function ajouter($f3) {
-        if(CIA(ADD_SUJET)) {
+    public function ajouter() {
+        if(CIA(ADD_SUJET, 0) && \Membre\Manager::instance()->getConnected()->getMatieres()) {
             afficherPage('templates/sujets/ajouter.htm');
         }
         else
