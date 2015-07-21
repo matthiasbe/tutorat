@@ -7,6 +7,11 @@ namespace Membre;
  */
 
 class Data {
+    
+    const SITUATION_PRIMANT = 1;
+    const SITUATION_DOUBLANT = 2;
+    const SITUATION_TRIPLANT= 3;
+    const SITUATION_TUTEUR = 4;
 
     /**
      * @var int
@@ -281,7 +286,20 @@ class Data {
      */
 
     public  function getSituation() {
-        return $this->situation;
+        switch($this->situation) {
+            case self::SITUATION_PRIMANT:
+                return "Primant";
+            case self::SITUATION_DOUBLANT:
+                return "Doublant";
+            case self::SITUATION_TRIPLANT:
+                return "Triplant";
+            case self::SITUATION_TUTEUR:
+                return "Membre du Tutorat";
+        }
+    }
+    
+    public function estTuteur() {
+        return $this->situation == self::SITUATION_TUTEUR;
     }
 
     /**

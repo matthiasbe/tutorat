@@ -71,28 +71,30 @@
             <div class="col-lg-10"><p><button onclick="supprimerMembre()" class="btn btn-info">Supprimer le membre</button></p></div>
         </div>
     </check>
-    <div class="row">
-        <div class="col-lg-2">
-            <p>
-                Matières attitrées :
-                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
-                    <img class="bouton" src="{{@root}}files/images/add.png" alt="Modifier" data-toggle="modal" data-target=".modal_matiere"/>
-                </check>
-            </p>
+    <check if="{{@membre->estTuteur()}}"
+        <div class="row">
+            <div class="col-lg-2">
+                <p>
+                    Matières attitrées :
+                    <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
+                        <img class="bouton" src="{{@root}}files/images/add.png" alt="Modifier" data-toggle="modal" data-target=".modal_matiere"/>
+                    </check>
+                </p>
+            </div>
+            <div class="col-lg-10">
+                <ul class="list-unstyled">
+                    <repeat group="{{@membre->getMatieresInArray()}}" key="{{@num}}" value="{{@matiere}}">
+                        <li>
+                            {{@matiere}}
+                            <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
+                                <img class="bouton" onclick="supprimerMatiere({{@num}})" src="{{@root}}files/images/delete.png" alt="Supprimer" />
+                            </check>
+                        </li>
+                    </repeat>
+                </ul>
+            </div>
         </div>
-        <div class="col-lg-10">
-            <ul class="list-unstyled">
-                <repeat group="{{@membre->getMatieresInArray()}}" key="{{@num}}" value="{{@matiere}}">
-                    <li>
-                        {{@matiere}}
-                        <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
-                            <img class="bouton" onclick="supprimerMatiere({{@num}})" src="{{@root}}files/images/delete.png" alt="Supprimer" />
-                        </check>
-                    </li>
-                </repeat>
-            </ul>
-        </div>
-    </div>
+    </check>
 </div>
 <!-- Fenêtre de modification de statut -->
 <div class="modal fade modal_statut" role="dialog" aria-labelledby="edit-site" aria-hidden="true" data-backdrop="false">
@@ -127,10 +129,10 @@
             </div>
             <div class="modal-body">
                 <select name="situation" id="situation">
-                    <option>Primant</option>
-                    <option>Doublant</option>
-                    <option>Triplant</option>
-                    <option>Membre du Tutorat</option>
+                    <option value="{{\Membre\Data::SITUATION_PRIMANT}}">Primant</option>
+                    <option value="{{\Membre\Data::SITUATION_DOUBLANT}}">Doublant</option>
+                    <option value="{{\Membre\Data::SITUATION_TRIPLANT}}">Triplant</option>
+                    <option value="{{\Membre\Data::SITUATION_TUTEUR}}">Membre du Tutorat</option>
                 </select>
             </div>
             <div class="modal-footer">
