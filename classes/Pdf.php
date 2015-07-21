@@ -46,6 +46,8 @@ class Pdf extends TCPDF {
         $this->nomAbrege = 'CB' . $sujet->getNumero_cb();
         $this->numMatiere = $sujet->getMatiere();
         $this->nomMatiere = $f3->get('matieres')[$sujet->getMatiere()];
+        
+        $this->initialisation();
 
         $this->premierePage();
         foreach ($questions as $question) {
@@ -53,6 +55,15 @@ class Pdf extends TCPDF {
         }
 
         return $this->Output('Sujet.pdf', 'I');
+    }
+    
+    /**
+     * Initialise les variable du pdf (auteur, nom du fichier, etc...)
+     * @access public
+     * @return void
+     */
+    public function initialisation() {
+        $this->setImageScale(1.5);
     }
 
     /**
@@ -136,7 +147,6 @@ class Pdf extends TCPDF {
             $texte .= '<p><img src="' . \ImgMng::getInstance()->getFolder() . '/' . $question->getImage(). '" ' . $attribut_largeur . '/></p>';
 
         }
-
         // On affiche les cinq items
         for($i=1; $i<=5;$i++)
             $texte .= '<p>' . ($i + 5*($question->getNumero_question()-1)) . ') '. $question->getItem($i) . '</p>';

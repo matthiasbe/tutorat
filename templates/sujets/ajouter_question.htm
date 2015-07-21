@@ -258,7 +258,7 @@
     }
     
     // Upload de l'image en utilisant le plugin jquery 'form'
-    $(document).ready(function() {
+    $('#image_form').on('show', function() {
         $('#image_upload_form').ajaxForm({
             success: function(data) {
                 retour = jQuery.parseJSON(data); // On décode les données renvoyées par ajax en echo
