@@ -96,36 +96,34 @@
     <div class="row">
         <div class="col-lg-2"><p>Image : </p></div>
         <div class="col-lg-10">
-            <check if="{{vip()}}">
-                <true>
-                <!--Formulaire d'ajout d'image-->
-                <div class="container-fluid collapse" id="image_form">
-                    <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
-                        <div class="form-group">
-                            <label for="image_file">Uploader une image : </label>
-                            <input type="file" id="image_file" name="image_file" />
-                        </div>
-                        <input name="submit" type="submit" value="Uploader" />
-                    </form>
-                </div>
-                <!--Affichage de l'image-->
-                <div class="container-fluid collapse" id="image_cell">
-                    <div class="input-group">
-                        <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
-                        <label for="largeur_image">Largeur :</label>
-                        <input type="text" name="largeur_image" id="largeur_image" />
-                        <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
+            <!--Formulaire d'ajout d'image-->
+            <div class="container-fluid collapse" id="image_form">
+                <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
+                    <div class="form-group">
+                        <label for="image_file">Uploader une image : </label>
+                        <input type="file" id="image_file" name="image_file" />
                     </div>
-                    <check if="{{isset(@question) && @question->getImage() != ''}}">
-                        <true><img id="image" width="{{@question->getLargeur_image()}}" src="{{@root}}files/images/{{@question->getImage()}}" /></true>
-                        <false><img id="image" src="" /></false>
-                    </check>
+                    <p>
+                        L'image ne peut pas dépasser 2Mo et elle doit être au format JPG. 
+                        Veuillez patienter 30s après avoir cliquer sur 'uploader' pour voir l'image apparaître (cela peut parfois prendre quelques minutes).
+                    </p>
+                    <p>Pensez à bien supprimer l'image si vous ne souhaitez pas enregistrer la question. Elle occupera de l'espace pour rien.</p>
+                    <input name="submit" type="submit" value="Uploader" />
+                </form>
+            </div>
+            <!--Affichage de l'image-->
+            <div class="container-fluid collapse" id="image_cell">
+                <div class="input-group">
+                    <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
+                    <label for="largeur_image">Largeur :</label>
+                    <input type="text" name="largeur_image" id="largeur_image" />
+                    <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
                 </div>
-                </true>
-                <false>
-                    <p>L'ajout d'image est indisponible pour le moment.</p>
-                </false>
-            </check>
+                <check if="{{isset(@question) && @question->getImage() != ''}}">
+                    <true><img id="image" width="{{@question->getLargeur_image()}}" src="{{@root}}files/images/{{@question->getImage()}}" /></true>
+                    <false><img id="image" src="" /></false>
+                </check>
+            </div>
         </div>
     </div>
     <!-- Affichage des 5 items -->
@@ -191,11 +189,30 @@
         if('{{@edition && strlen(@question->getImage())}}' != '')
             $('#image_cell').collapse('show');
         else
-            $('#image_form').collapse('show');
+            afficher_img_form();
     }
     else
-        $('#image_form').collapse('show');
+        afficher_img_form();
         
+    function afficher_img_form() {
+        $('#image_form').collapse('show');
+        // Upload de l'image en utilisant le plugin jquery 'form'
+        $('#image_upload_form').ajaxForm({
+            success: function(data) {
+                retour = jQuery.parseJSON(data); // On décode les données renvoyées par ajax en echo
+                if(retour.erreur)
+                    alert('Erreur : ' + retour.message);
+                else {
+                    $('#image').attr('src', retour.image_path);
+                    $('#image_form').collapse('hide');
+                    $('#image_cell').collapse('show');
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert('Une erreur est survenue lors de la requête ajax. Voici le contenu de la réponse : \n' + xhr.responseText);
+            }
+        });
+    }
     
     // On programme l'ouverture des collapses quand on coche la checkbox
     $('#enonce_sup_checkbox').on('change', function(e) {
@@ -263,24 +280,6 @@
         });
     }
     
-    // Upload de l'image en utilisant le plugin jquery 'form'
-    $('#image_form').on('show', function() {
-        $('#image_upload_form').ajaxForm({
-            success: function(data) {
-                retour = jQuery.parseJSON(data); // On décode les données renvoyées par ajax en echo
-                if(retour.erreur)
-                    alert('Erreur : ' + retour.message);
-                else {
-                    $('#image').attr('src', retour.image_path);
-                    $('#image_form').collapse('hide');
-                    $('#image_cell').collapse('show');
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                alert('Une erreur est survenue lors de la requête ajax. Voici le contenu de la réponse : \n' + xhr.responseText);
-            }
-        })
-    });
     
     // Suppression de l'image (de la question et du serveur)
     function supprimerImage() {
