@@ -1,5 +1,7 @@
 <?php
 
+define('ERREUR_MATIERE', 'Vous n\'avez aucune matière attribuée à votre profil. Contactez l\'administrateur.');
+
 /**
  * Fonctions globales utilisées partout
  * Ce fichier et chargé en début de chaque pages

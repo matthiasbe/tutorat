@@ -91,7 +91,7 @@ class View {
             $condition = CIA(EDIT_QUESTION, 0, $question);
         }
         else {
-            $condition = CIA(ADD_QUESTION) && \Membre\Manager::instance()->getConnected()->getMatieres() != 0;
+            $condition = CIA(ADD_QUESTION) && \Membre\Manager::instance()->getConnected()->getMatieres();
         }
         if($condition) {
             afficherPage('templates/sujets/ajouter_question.htm');

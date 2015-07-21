@@ -64,8 +64,12 @@ class View {
     }
     
     public function ajouter() {
-        if(CIA(ADD_SUJET, 0) && \Membre\Manager::instance()->getConnected()->getMatieres()) {
-            afficherPage('templates/sujets/ajouter.htm');
+        if(CIA(ADD_SUJET, 0)) {
+            if(\Membre\Manager::instance()->getConnected()->getMatieres()) {
+                afficherPage('templates/sujets/ajouter.htm');
+            }
+            else
+                echo ERREUR_MATIERE;
         }
         else
             afficherPage (PAGE_ERREUR);
