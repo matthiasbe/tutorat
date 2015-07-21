@@ -39,11 +39,41 @@ class View {
             $resultats = $membre->getAllResultats();
             $f3->set('resultats', $resultats);
 
-            afficherPage('templates/membre/profil.htm');
+            afficherPage('templates/membre/espace.htm');
         }
         else {
             afficherPage(PAGE_ERREUR);
         }
+    }
+    /**
+     * POST.old_mdp : ancien mdp
+     * POST.new_mdp1 : nouveau mdp
+     * POST.new_mdp2 : confirmation du nouveau mdp
+     * @access public
+     * @param Base $f3
+     * @return void
+     */
+    public function receptionModifierMdp($f3) {
+        $id_membre = $f3->get('PARAMS.id');
+        if(Manager::instance()->estAutoriseAModifier($id_membre, 'mdp')) {
+            $old = $f3->get('POST.old_mdp');
+            $new1 = $f3->get('POST.new_mdp1');
+            $new2 = $f3->get('POST.new_mdp2');
+            $membre = Manager::instance()->getFromId($id_membre);
+            
+            if($new1 == $new2) {
+                if($membre->testMdp($old)) {
+                    $membre->setMdp(sha1($new1));
+                    Manager::instance()->update($membre);
+                    echo 'Mot de passe enregistré.';
+                }
+                else
+                    echo 'L\'ancien mot de passe entré est incorrect.';
+            }
+            else
+                echo 'Les deux nouveau mots de passe sont différents.';
+        }
+        $this->profil($f3);
     }
     
     /**

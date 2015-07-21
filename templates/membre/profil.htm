@@ -1,101 +1,94 @@
-<h2>Mon espace membre</h2>
-<ul class="nav nav-tabs">
-    <li class="active">Profil</li>
-    <li>Résultats</li>
-</ul>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-2"><p>Nom d'utilisateur : </p></div>
-        <div class="col-lg-10">
-            <p>
-                <span id="pseudo">{{@membre->getPseudo()}}</span>
-                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'pseudo')}}">
-                    <img class="bouton" onclick="modifier('pseudo')" src="{{@root}}files/images/edit.png"/>
-                </check>
-            </p>
-        </div>
+<div class="row">
+    <div class="col-lg-2"><p>Nom d'utilisateur : </p></div>
+    <div class="col-lg-10">
+        <p>
+            <span id="pseudo">{{@membre->getPseudo()}}</span>
+            <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'pseudo')}}">
+                <img class="bouton" onclick="modifier('pseudo')" src="{{@root}}files/images/edit.png"/>
+            </check>
+        </p>
     </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Statut : </p></div>
-        <div class="col-lg-10">
-            <p>
-                {{@membre->getStatutObject()->getNom()}}
-                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'statut')}}">
-                    <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_statut"/>
-                </check>
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Nom : </p></div>
-        <div class="col-lg-10"><p>{{@membre->getNom()}} {{@afficherBoutonModifier('nom')}}</p></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Prénom : </p></div>
-        <div class="col-lg-10"><p>{{@membre->getPrenom()}} {{@afficherBoutonModifier('prenom')}}</p></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Situation : </p></div>
-        <div class="col-lg-10">
-            <p>
-                {{@membre->getSituation()}} 
-                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'situation')}}">
-                    <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_situation"/>
-                </check>
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Site : </p></div>
-        <div class="col-lg-10">
-            <p>
-                {{@membre->getSite()}}
-                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'site')}}">
-                    <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_site"/>
-                </check>
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Email : </p></div>
-        <div class="col-lg-10"><p>{{@membre->getEmail()}} {{@afficherBoutonModifier('email')}}</p></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"><p>Téléphone : </p></div>
-        <div class="col-lg-10"><p>{{@membre->getPortable()}} {{@afficherBoutonModifier('portable')}}</p></div>
-    </div>
-    
-    <check if="{{CIA(DELETE_MEMBRE, 0)}}">
-        <div class="row">
-            <div class="col-lg-2"><p>Supprimer : </p></div>
-            <div class="col-lg-10"><p><button onclick="supprimerMembre()" class="btn btn-info">Supprimer le membre</button></p></div>
-        </div>
-    </check>
-    <check if="{{@membre->estTuteur()}}"
-        <div class="row">
-            <div class="col-lg-2">
-                <p>
-                    Matières attitrées :
-                    <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
-                        <img class="bouton" src="{{@root}}files/images/add.png" alt="Modifier" data-toggle="modal" data-target=".modal_matiere"/>
-                    </check>
-                </p>
-            </div>
-            <div class="col-lg-10">
-                <ul class="list-unstyled">
-                    <repeat group="{{@membre->getMatieresInArray()}}" key="{{@num}}" value="{{@matiere}}">
-                        <li>
-                            {{@matiere}}
-                            <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
-                                <img class="bouton" onclick="supprimerMatiere({{@num}})" src="{{@root}}files/images/delete.png" alt="Supprimer" />
-                            </check>
-                        </li>
-                    </repeat>
-                </ul>
-            </div>
-        </div>
-    </check>
 </div>
+<div class="row">
+    <div class="col-lg-2"><p>Statut : </p></div>
+    <div class="col-lg-10">
+        <p>
+            {{@membre->getStatutObject()->getNom()}}
+            <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'statut')}}">
+                <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_statut"/>
+            </check>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2"><p>Nom : </p></div>
+    <div class="col-lg-10"><p>{{@membre->getNom()}} {{@afficherBoutonModifier('nom')}}</p></div>
+</div>
+<div class="row">
+    <div class="col-lg-2"><p>Prénom : </p></div>
+    <div class="col-lg-10"><p>{{@membre->getPrenom()}} {{@afficherBoutonModifier('prenom')}}</p></div>
+</div>
+<div class="row">
+    <div class="col-lg-2"><p>Situation : </p></div>
+    <div class="col-lg-10">
+        <p>
+            {{@membre->getSituation()}} 
+            <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'situation')}}">
+                <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_situation"/>
+            </check>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2"><p>Site : </p></div>
+    <div class="col-lg-10">
+        <p>
+            {{@membre->getSite()}}
+            <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'site')}}">
+                <img class="bouton" src="{{@root}}files/images/edit.png" alt="Modifier" data-toggle="modal" data-target=".modal_site"/>
+            </check>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2"><p>Email : </p></div>
+    <div class="col-lg-10"><p>{{@membre->getEmail()}} {{@afficherBoutonModifier('email')}}</p></div>
+</div>
+<div class="row">
+    <div class="col-lg-2"><p>Téléphone : </p></div>
+    <div class="col-lg-10"><p>{{@membre->getPortable()}} {{@afficherBoutonModifier('portable')}}</p></div>
+</div>
+
+<check if="{{CIA(DELETE_MEMBRE, 0)}}">
+    <div class="row">
+        <div class="col-lg-2"><p>Supprimer : </p></div>
+        <div class="col-lg-10"><p><button onclick="supprimerMembre()" class="btn btn-info">Supprimer le membre</button></p></div>
+    </div>
+</check>
+<check if="{{@membre->estTuteur()}}"
+    <div class="row">
+        <div class="col-lg-2">
+            <p>
+                Matières attitrées :
+                <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
+                    <img class="bouton" src="{{@root}}files/images/add.png" alt="Modifier" data-toggle="modal" data-target=".modal_matiere"/>
+                </check>
+            </p>
+        </div>
+        <div class="col-lg-10">
+            <ul class="list-unstyled">
+                <repeat group="{{@membre->getMatieresInArray()}}" key="{{@num}}" value="{{@matiere}}">
+                    <li>
+                        {{@matiere}}
+                        <check if="{{\Membre\Manager::instance()->estAutoriseAModifier(@membre->getId(), 'matieres')}}">
+                            <img class="bouton" onclick="supprimerMatiere({{@num}})" src="{{@root}}files/images/delete.png" alt="Supprimer" />
+                        </check>
+                    </li>
+                </repeat>
+            </ul>
+        </div>
+    </div>
+</check>
 <!-- Fenêtre de modification de statut -->
 <div class="modal fade modal_statut" role="dialog" aria-labelledby="edit-site" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog">

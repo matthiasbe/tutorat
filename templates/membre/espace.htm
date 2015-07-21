@@ -1,0 +1,26 @@
+<h2>Mon espace membre</h2>
+<ul class="nav nav-tabs">
+    <li class="active" data-link="profil"><a onclick="afficher('profil')" href="#">Profil</a></li>
+    <li data-link="resultats"><a href="#" onclick="afficher('resultats')">Résultats</a></li>
+    <li data-link="modifier_mdp"><a href="#" onclick="afficher('modifier_mdp')">Changer mon MDP</a></li>
+</ul>
+<div class="container-fluid" id="resultats">
+    <include href="templates/membre/resultats.htm"/>
+</div>
+<div class="container-fluid" id="modifier_mdp">
+    <include href="templates/membre/modifier_mdp.htm"/>
+</div>
+<div class="container-fluid" id="profil">
+    <include href="templates/membre/profil.htm"/>
+</div>
+
+<script type="text/javascript">
+    $('#resultats, #modifier_mdp').hide();
+    
+    function afficher(onglet) {
+        $('#profil, #resultats, #modifier_mdp').hide();
+        $('#' + onglet).show();
+        $('li[data-link]').removeClass('active');
+        $('li[data-link='+onglet+']').addClass('active');
+    }
+</script>
