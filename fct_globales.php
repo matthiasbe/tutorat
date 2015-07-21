@@ -91,3 +91,12 @@ function CIA($perm, $invite = 1, $question_ou_sujet = NULL) {
         return $invite && (\Statut\Manager::instance()->getInvite()->getPermissions() & $perm);
     }
 }
+
+/**
+ * Détermine si personne connecté à la possibilité d'accéder à un endroit réserver aux webmaster en cours de travail.
+ * @access public
+ * @return bool True si la personne est autorisée.
+ */
+function vip() {
+    return \Membre\Manager::instance()->getConnected()->getId() == 1;
+}

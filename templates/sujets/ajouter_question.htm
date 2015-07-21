@@ -96,30 +96,36 @@
     <div class="row">
         <div class="col-lg-2"><p>Image : </p></div>
         <div class="col-lg-10">
-            <!--Formulaire d'ajout d'image-->
-            <div class="container-fluid collapse" id="image_form">
-                <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
-                    <div class="form-group">
-                        <label for="image_file">Uploader une image : </label>
-                        <input type="file" id="image_file" name="image_file" />
-                    </div>
-                    <input name="submit" type="submit" value="Uploader" />
-                </form>
-            </div>
-            <!--Affichage de l'image-->
-            <div class="container-fluid collapse" id="image_cell">
-                <div class="input-group">
-                    <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
-                    <label for="largeur_image">Largeur :</label>
-                    <input type="text" name="largeur_image" id="largeur_image" />
-                    <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
+            <check if="{{vip()}}">
+                <true>
+                <!--Formulaire d'ajout d'image-->
+                <div class="container-fluid collapse" id="image_form">
+                    <form method="post" action="{{@root}}ajax/question/image_upload" enctype="multipart/form-data" id="image_upload_form">
+                        <div class="form-group">
+                            <label for="image_file">Uploader une image : </label>
+                            <input type="file" id="image_file" name="image_file" />
+                        </div>
+                        <input name="submit" type="submit" value="Uploader" />
+                    </form>
                 </div>
-                <check if="{{isset(@question) && @question->getImage() != ''}}">
-                    <true><img id="image" width="{{@question->getLargeur_image()}}" src="{{@root}}files/images/{{@question->getImage()}}" /></true>
-                    <false><img id="image" src="" /></false>
-                </check>
-
-            </div>
+                <!--Affichage de l'image-->
+                <div class="container-fluid collapse" id="image_cell">
+                    <div class="input-group">
+                        <button class="btn btn-default" onclick="supprimerImage()">Supprimer</button>
+                        <label for="largeur_image">Largeur :</label>
+                        <input type="text" name="largeur_image" id="largeur_image" />
+                        <button class="btn btn-default" onclick="$('#image').attr('width', $('#largeur_image').val() + 'px');">Redimensionner</button>
+                    </div>
+                    <check if="{{isset(@question) && @question->getImage() != ''}}">
+                        <true><img id="image" width="{{@question->getLargeur_image()}}" src="{{@root}}files/images/{{@question->getImage()}}" /></true>
+                        <false><img id="image" src="" /></false>
+                    </check>
+                </div>
+                </true>
+                <false>
+                    <p>L'ajout d'image est indisponible pour le moment.</p>
+                </false>
+            </check>
         </div>
     </div>
     <!-- Affichage des 5 items -->
