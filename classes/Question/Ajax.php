@@ -47,7 +47,6 @@ class Ajax {
         $question = new Data($f3->get('POST.donnees'));
         // On donne un auteur : l'utilisateur connecté ou celui du sujet rattaché
         $question->determinerAuteurs();
-        echo $question->getAuteurs();
         $connected = \Membre\Manager::instance()->getConnected();
         
         // On remplit les champs manquants (voir ci dessus)

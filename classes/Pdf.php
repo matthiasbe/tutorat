@@ -63,7 +63,7 @@ class Pdf extends TCPDF {
      * @return void
      */
     public function initialisation() {
-        $this->setImageScale(1.5);
+        $this->setImageScale(1.8);
     }
 
     /**
@@ -150,6 +150,8 @@ class Pdf extends TCPDF {
         // On affiche les cinq items
         for($i=1; $i<=5;$i++)
             $texte .= '<p>' . ($i + 5*($question->getNumero_question()-1)) . ') '. $question->getItem($i) . '</p>';
+        
+        $texte = preg_replace('#\.\.\/\.\.\/#', '', $texte);
         
         $this->writeHTML($texte);
     }
