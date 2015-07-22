@@ -5,7 +5,7 @@
 
 require_once 'tcpdf/tcpdf.php';
 
-class PdfCorrige extends TCPDF {
+class PdfCorrige extends Pdf {
 
     /**
      * @var string Le nom de la matière du sujet.
