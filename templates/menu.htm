@@ -14,8 +14,21 @@
     <true>
             <ul class="nav navbar-top-links navbar-right">
                 {{@SESSION.user->getPseudo()}}
-                <li><a href="{{@root}}profil/{{@SESSION.user->getId()}}"><i class="fa fa-user fa-fw"></i></a><li>
-                <li><a href="{{@root}}deconnexion?v={{@SERVER.REQUEST_URI}}"><i class="fa fa-chain-broken fa-fw"></i></a></li>
+                <li>
+                    <a href="{{@root}}profil/{{@SESSION.user->getId()}}" title="Espace Etudiant">
+                        <i class="fa fa-user fa-fw"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{@root}}deconnexion?v={{@SERVER.REQUEST_URI}}" title="Se déconnecter">
+                        <i class="fa fa-power-off fa-fw"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://github.org/matthiasbe/tutorat/issues/new" target="_blank" title="Reporter un problème (nécessite un compte Github)">
+                        <i  class="fa fa-exclamation-triangle fa-fw"></i>
+                    </a>
+                </li>
             </ul>
     </true>
 </check>

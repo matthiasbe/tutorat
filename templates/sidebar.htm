@@ -8,8 +8,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ @root }}archives">
-                    <i class="fa fa-folder-open-o fa-fw"></i> Sujets/Corrigés
+                <a href="{{ @root }}archives" title="Sujets déjà distribués">
+                    <i class="fa fa-archive fa-fw"></i> Sujets/Corrigés
                 </a>
             </li>
             <li class="disabled">
@@ -19,24 +19,24 @@
                 </a>
             </li>
             <li>
-                <a href="{{ @root }}qcms">
-                    <i class="fa fa-folder-open-o fa-fw"></i> Banque de QCM
+                <a href="{{ @root }}qcms" title="QCM d'entraînement.">
+                    <i class="fa fa-file-text-o fa-fw"></i> Banque de QCM
                 </a>
             </li>
             <li class="disabled">
                 <!--<a href="{{ @root }}statistiques">-->
-                <a href="#">
+                <a href="#" title="Statistiques de résultat">
                     <i class="fa fa-bar-chart-o fa-fw"></i> Statistiques
                 </a>
             </li>
             <li class="disabled">
-                <a href="#">
+                <a href="#" title="Le forum du tutorat">
                     <i class="fa fa-group fa-fw"></i> Forum
                 </a>
             </li>
             <check if="{{CIA(SEE_SUJETS | ADD_SUJET | SEE_QUESTIONS | ADD_QUESTION)}}">
                 <li>
-                    <a href="#">Création<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-paint-brush fa-fw"></i> Création<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <check if="{{CIA(SEE_SUJETS)}}">
                             <li>
@@ -85,7 +85,7 @@
             </check>
             <check if="{{CIA(SEE_MEMBRES | ADD_MEMBRE | UPLOAD_RESULTS | EDIT_PERMISSIONS)}}">
                 <li>
-                    <a href="#">Administration<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-wrench fa-fw"></i> Administration<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <check if="{{CIA(SEE_MEMBRES)}}">
                             <li>
