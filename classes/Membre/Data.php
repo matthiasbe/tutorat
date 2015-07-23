@@ -12,6 +12,12 @@ class Data {
     const SITUATION_DOUBLANT = 2;
     const SITUATION_TRIPLANT= 3;
     const SITUATION_TUTEUR = 4;
+    
+    /**
+     * Longueur du mdp aléatoire
+     */
+    const MDP_ALEAT_LONGUEUR = 8;
+    const MDP_ALEAT_POSSIBLE = 'abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     /**
      * @var int
@@ -231,6 +237,16 @@ class Data {
 
     public  function setMdp($mdp) {
         $this->mdp = $mdp;
+    }
+    
+    public function genererMdp() {
+        $mdp = "";
+        for ($i = 0; $i < self::MDP_ALEAT_LONGUEUR; $i++) {
+            $possible = self::MDP_ALEAT_POSSIBLE;
+            $mdp .= $possible[rand(0, strlen($possible)-1)];
+        }
+        $this->mdp = sha1($mdp);
+        return $mdp;
     }
 
 
@@ -510,5 +526,28 @@ class Data {
      */
     public function getSujets() {
         return \Sujets\Manager::instance()->getFromMembre($this);
+    }
+    
+    public function sendEmailAndGenerateMdp() {
+        ini_set("SMTP", "smtp.tsps.fr");
+        ini_set("sendmail_from", "postmaster@tsps.fr");
+
+        $nouveau_mdp = $this->genererMdp();
+        $header ='From: postmaster@tsps.fr'."\n"
+                .'Reply-To: postmaster@tsps.fr'."\n"
+                .'Content-Type: text/plain; charset="utf-8"'."\n"
+                .'Content-Transfer-Encoding: 8bit';
+        $content = 'Bonjour,<br/>'
+                    . 'Voici vos nouvelles informations de connexion pour le site du tutorat de médecine du'
+                    . 'Kremlin-Bicêtre.<br/>'
+                    . 'Identifiant : ' . $this->getPseudo() . '<br/>'
+                    . 'Mot de passe : ' . $nouveau_mdp . '<br/>'
+                    . 'Nous vous souhaitons une bonne utilisation du site www.tsps.fr<br/>'
+                    . 'Pensez à modifier votre mot de passe à votre première connexion.<br/>'
+                    . 'A bientôt !'
+                    . 'L\'équipe du tutorat.';
+        if(!mail($this->email, MAIL_VALIDATION_SUJET, $content, $header)) {
+            echo 'erreur';
+        }
     }
 }
