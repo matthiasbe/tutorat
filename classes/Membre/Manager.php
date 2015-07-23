@@ -125,19 +125,14 @@ class Manager {
      */
     
     public function connect($pseudo, $mdp) {
-        if($this->pseudoExiste($pseudo)) {
-            $membre = $this->getFromPseudo($pseudo);
-            if($membre->testMdp($mdp)) {
-                $f3 = \Base::instance();
-                $f3->set('SESSION.user', $membre);
-            }
-            else {
-                throw new \Exception('Mauvais mot de passe.');
-            }
-        }
-        else {
-            throw new \Exception('Cet identifiant n\'existe pas.');
-        }
+        if(!$this->pseudoExiste($pseudo)) throw new \Exception('Cet identifiant n\'existe pas.');
+        
+        $membre = $this->getFromPseudo($pseudo);
+        if(!$membre->estValide()) throw new \Exception('Votre inscription n\'a pas encore été validée.');
+        if(!$membre->testMdp($mdp)) throw new \Exception('Mauvais mot de passe.');
+        
+        $f3 = \Base::instance();
+        $f3->set('SESSION.user', $membre);
     }
     
     /**

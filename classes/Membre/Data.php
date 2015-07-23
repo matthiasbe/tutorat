@@ -148,6 +148,20 @@ class Data {
         $this->pseudo = $pseudo;
     }
 
+    /**
+     * Génère un pseudo à partir des nom est prénom.
+     * On enlève les accents et les tirets.
+     * Ici ce sera Jack Dutronc => dutronj
+     * @access public
+     */
+
+    public  function setPseudoFromNom() {
+        $pseudo = strtolower($this->nom) . strtolower($this->prenom)[0];
+        $pseudo = preg_replace('#-#', '', $pseudo);
+        $pseudo = preg_replace('#éè#', 'e', $pseudo);
+        $this->pseudo = $pseudo;
+    }
+
 
     /**
      * @access public
@@ -369,6 +383,10 @@ class Data {
 
     public  function getStatutObject() {
         return \Statut\Manager::instance()->getFromId($this->statut);
+    }
+    
+    public function estValide() {
+        return $this->statut != -1;
     }
 
 

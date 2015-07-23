@@ -194,4 +194,41 @@ class View {
         }
     }
     
+    /**
+     * Affiche la page d'inscription.
+     * Si requète POST, on ajoute le membre sans l'activer (statut = -1).
+     * POST.nom : le nom de l'étudiant.
+     * POST.prenom : son prénom.
+     * POST.situation
+     * POST.email
+     * POST.portable
+     * POST.site
+     * @access public
+     * @param Base $f3
+     * @return void
+     */
+    public function inscription($f3) {
+        if(count($f3->get('POST')) == 0) {
+            afficherPage('templates/membre/inscription.htm');
+        }
+        else {
+            $membre = new Data(array(
+                'nom' => $f3->get('POST.nom'),
+                'prenom' => $f3->get('POST.prenom'),
+                'situation' => $f3->get('POST.situation'),
+                'site' => $f3->get('POST.site'),
+                'email' => $f3->get('POST.email'),
+                'portable' => $f3->get('POST.portable'),
+                'site' => $f3->get('POST.site'),
+            ));
+            $membre->setStatut(-1);
+            $membre->setPseudoFromNom();
+            Manager::instance()->add($membre);
+            
+            \Msg::instance()->add(\Msg::STATUT_SUCCESS, \Msg::INSCRIPTION_SUCCESS);
+            $gl = new \General;
+            $gl->AfficherAccueil($f3);
+        }
+    }
+    
 }

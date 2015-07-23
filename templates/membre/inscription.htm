@@ -1,0 +1,64 @@
+<h2>Inscription</h2>
+
+<form method="post" action="">
+    <p>Veuillez renseigner vos informations personnelles.</p>
+    <p>Un fois votre compte créé, vous devrez patienter jusqu'à sa validation par un modérateur, puis vous recevrer un mot de passer
+    par email.</p>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="nom">Nom : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="nom" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="prenom">Prénom : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="prenom" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="email">Email : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="email" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Numéro de portable (facultatif) : </label>
+        </div>
+        <div class="col-lg-10">
+            <input type="text" name="portable" class="form-control"/>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Site : </label>
+        </div>
+        <div class="col-lg-10">
+            <select name="site">
+                <option value="Châtenay">Châtenay</option>
+                <option value="Orsay">Orsay</option>
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-lg-2">
+            <label for="portable">Situation : </label>
+        </div>
+        <div class="col-lg-10">
+            <select name="situation">
+                <option value="{{\Membre\Data::SITUATION_PRIMANT}}">Primant</option>
+                <option value="{{\Membre\Data::SITUATION_DOUBLANT}}">Doublant</option>
+                <option value="{{\Membre\Data::SITUATION_TRIPLANT}}">Triplant</option>
+                <option value="{{\Membre\Data::SITUATION_TUTEUR}}">Membre du Tutorat</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn">Envoyer</button>
+</form>

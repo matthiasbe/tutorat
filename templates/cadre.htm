@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
 
@@ -49,6 +49,7 @@
             <include href="templates/sidebar.htm" />
         </nav>
         <div id="page-wrapper" style="margin-top: -20px; padding-top: 20px">
+            {{\Msg::instance()->displayAll()}}
             <include href="{{ @page }}" />
         </div>
 
