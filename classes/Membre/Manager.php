@@ -46,12 +46,13 @@ class Manager {
             $membre_db = new \DB\SQL\Mapper($this->db,'membres');
             $membre_db->load(array('id=?', $membre->getId()));
             $ancien_statut = $membre_db->statut;
-            $membre->remplirMapper($membre_db);
             
             // si il y a validation, on envoie un mail.
             if($ancien_statut == -1 && $membre->estValide()) {
                 $membre->sendEmailAndGenerateMdp();
             }
+            
+            $membre->remplirMapper($membre_db);
             $membre_db->update();
         }
         else {

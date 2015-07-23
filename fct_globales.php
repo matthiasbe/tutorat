@@ -1,5 +1,4 @@
 <?php
-define('MAIL_VALIDATION_SUJET', 'Vos identifiant pour le site du tutorat.');
 define('ERREUR_MATIERE', 'Vous n\'avez aucune matière attribuée à votre profil. Contactez l\'administrateur.');
 
 /**

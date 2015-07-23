@@ -535,18 +535,18 @@ class Data {
         $nouveau_mdp = $this->genererMdp();
         $header ='From: postmaster@tsps.fr'."\n"
                 .'Reply-To: postmaster@tsps.fr'."\n"
-                .'Content-Type: text/plain; charset="utf-8"'."\n"
+                .'Content-Type: text/html; charset="utf-8"'."\n"
                 .'Content-Transfer-Encoding: 8bit';
         $content = 'Bonjour,<br/>'
-                    . 'Voici vos nouvelles informations de connexion pour le site du tutorat de médecine du'
+                    . 'Voici vos nouvelles informations de connexion pour le site du tutorat de médecine du '
                     . 'Kremlin-Bicêtre.<br/>'
-                    . 'Identifiant : ' . $this->getPseudo() . '<br/>'
-                    . 'Mot de passe : ' . $nouveau_mdp . '<br/>'
-                    . 'Nous vous souhaitons une bonne utilisation du site www.tsps.fr<br/>'
+                    . '<strong>Identifiant : ' . $this->getPseudo() . '</strong><br/>'
+                    . '<strong>Mot de passe : ' . $nouveau_mdp . '</strong><br/>';
+        $content .= 'Nous vous souhaitons une bonne utilisation du site www.tsps.fr<br/>'
                     . 'Pensez à modifier votre mot de passe à votre première connexion.<br/>'
-                    . 'A bientôt !'
+                    . 'A bientôt !<br/>'
                     . 'L\'équipe du tutorat.';
-        if(!mail($this->email, MAIL_VALIDATION_SUJET, $content, $header)) {
+        if(!mail($this->email, 'Vos identifiant pour le tutorat KB', $content, $header)) {
             echo 'erreur';
         }
     }
