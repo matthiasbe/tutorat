@@ -226,22 +226,28 @@ class View {
             afficherPage('templates/membre/inscription.htm');
         }
         else {
-            $membre = new Data(array(
-                'nom' => $f3->get('POST.nom'),
-                'prenom' => $f3->get('POST.prenom'),
-                'situation' => $f3->get('POST.situation'),
-                'site' => $f3->get('POST.site'),
-                'email' => $f3->get('POST.email'),
-                'portable' => $f3->get('POST.portable'),
-                'site' => $f3->get('POST.site'),
-            ));
-            $membre->setStatut(-1);
-            $membre->setPseudoFromNom();
-            Manager::instance()->add($membre);
+            try {
+                $membre = new Data(array(
+                    'nom' => $f3->get('POST.nom'),
+                    'prenom' => $f3->get('POST.prenom'),
+                    'situation' => $f3->get('POST.situation'),
+                    'site' => $f3->get('POST.site'),
+                    'email' => $f3->get('POST.email'),
+                    'portable' => $f3->get('POST.portable'),
+                    'site' => $f3->get('POST.site'),
+                ));
             
-            \Msg::instance()->add(\Msg::STATUT_SUCCESS, \Msg::INSCRIPTION_SUCCESS);
-            $gl = new \General;
-            $gl->AfficherAccueil($f3);
+                $membre->setStatut(-1);
+                $membre->setPseudoFromNom();
+                Manager::instance()->add($membre);
+                \Msg::instance()->add(\Msg::STATUT_SUCCESS, \Msg::INSCRIPTION_SUCCESS);
+                $gl = new \General;
+                $gl->AfficherAccueil($f3);
+            } catch (\Exception $exc) {
+                \Msg::instance()->add(\Msg::STATUT_ERROR, $exc->getMessage());
+                $f3->set('POST', array());
+                $this->inscription($f3);
+            }
         }
     }
     
