@@ -5,7 +5,14 @@
         <th>Statut</th>
     </tr>
     <repeat group="{{ @membres }}" value="{{ @champs }}">
-        <tr>
+        <check if="{{!@champs->estValide()}}">
+            <true>
+                <tr class="warning">
+            </true>
+            <false>
+                <tr>
+            </false>
+        </check>
             <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
                 {{ @champs->getId()}}
             </td>
