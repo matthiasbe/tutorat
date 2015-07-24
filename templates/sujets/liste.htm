@@ -15,7 +15,7 @@
     <repeat group="{{ @result }}" value="{{ @champs }}">
         <tr>
             <td><a href="{{@root}}sujets/{{ @champs->getId() }}">{{ @champs->getId() }}</a></td>
-            <td><a href="{{@root}}profil/{{ @champs->getAuteurs() }}">{{ \Membre\Manager::instance()->getFromId(@champs->getAuteurs())->getPseudo() }}</a></td>
+            <td><a href="{{@root}}profil/{{ @champs->getAuteurs() }}">{{ \Membre\Manager::instance()->getFromId(@champs->getAuteurs())->getNomComplet() }}</a></td>
             <td>{{ @matieres[@champs->getMatiere()] }}</td>
             <td>{{ @champs->getNumero_cb() }}</td>
             <td>{{ @champs->getNombre_questions() }}</td>

@@ -17,7 +17,7 @@
                 {{ @champs->getId()}}
             </td>
             <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
-                {{ @champs->getNom() }} {{ @champs->getPrenom() }}
+                {{ @champs->getNomComplet() }}
             </td>
             <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
                 {{ @champs->getStatutObject()->getNom() }}

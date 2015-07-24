@@ -49,7 +49,7 @@
                 <td><a href="{{@root}}sujets/question/{{ @champs->getId() }}">{{ @champs->getId() }}</a></td>
                 
                 <!--TD auteur-->
-                <td data-auteur="{{@champs->getAuteurs()}}"><a href="{{@root}}profil/{{ @champs->getAuteurs() }}">{{ \Membre\Manager::instance()->getFromId(@champs->getAuteurs())->getPseudo() }}</a></td>
+                <td data-auteur="{{@champs->getAuteurs()}}"><a href="{{@root}}profil/{{ @champs->getAuteurs() }}">{{ \Membre\Manager::instance()->getFromId(@champs->getAuteurs())->getNomComplet() }}</a></td>
                 
                 <!--TD matiere-->
                 <td data-matiere="{{@champs->getMatiere()}}">{{ @matieres[@champs->getMatiere()] }}</td>

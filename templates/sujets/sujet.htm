@@ -3,7 +3,7 @@
 <button class="btn">Supprimer le sujet</button>
 <a class="btn" href="{{ @sujet->getId() }}/pdf">Télécharger la version PDF</a>
 
-<p>Auteur : {{ \Membre\Manager::instance()->getFromId(@sujet->getAuteurs())->getPseudo() }}</p>
+<p>Auteur : {{ \Membre\Manager::instance()->getFromId(@sujet->getAuteurs())->getNomComplet() }}</p>
 <p>Matière : {{@matieres[@sujet->getMatiere()]}}</p>
 <p>Date : {{@sujet->getDate()}}</p>
 <p>Le sujet comporte {{@sujet->getNombre_questions()}} questions</p>

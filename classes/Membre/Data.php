@@ -323,6 +323,14 @@ class Data {
     public  function getNom() {
         return $this->nom;
     }
+    
+    /**
+     * 
+     * @return string le nom complet du membre (ex: Charles Dupont)
+     */
+    public function getNomComplet() {
+        return $this->prenom . ' ' . $this->nom;
+    }
 
 
     /**
