@@ -88,7 +88,7 @@ class Manager {
             $membre_db->erase(array('id=?', $membre->getId()));
         }
         else {
-            throw new Exception('Impossible de supprimer ce membre : ID inconnu. id : ' . $membre->getId());
+            throw new\Exception('Impossible de supprimer ce membre : ID inconnu. id : ' . $membre->getId());
         }
     }
 
@@ -231,26 +231,35 @@ class Manager {
         
         $data = $reader->sheets[0]['cells'];
         // premier indice -> ligne
+        $champs_autorises = array('nom', 'prenom', 'site', 'situation', 'statut', 'email', 'matieres', 'portable');
         for ($j = 1; $j <= count($data[1]); $j++) {
-            if(method_exists('\Membre\Data', 'set' . ucfirst($data[1][$j]))) {
-                $champs[$j] = strtolower($data[1][$j]);
-            }
-            else
-                throw new \Exception('La colonne n°' . $j . ' n\'a pas un nom valide. Pensez à enlever les accents');
+            if(!in_array(strtolower($data[1][$j]), $champs_autorises)) throw new \Exception('La colonne n°' . $j . ' n\'a pas un nom valide. Pensez à enlever les accents');
+            $champs[$j] = strtolower($data[1][$j]);
         }
+        if(!in_array('nom', $champs)) throw new\Exception ('Colonne "nom" introuvable'); 
+        if(!in_array('prenom', $champs)) throw new\Exception ('Colonne "prenom" introuvable'); 
+        if(!in_array('site', $champs)) throw new\Exception ('Colonne "site" introuvable'); 
+        if(!in_array('situation', $champs)) throw new\Exception ('Colonne "situation" introuvable'); 
+        if(!in_array('email', $champs)) throw new\Exception ('Colonne "email" introuvable'); 
         
         for ($i = 2; $i <= count($data); $i++) {
             $membre_array = array();
             for ($j = 1; $j <= count($data[1]); $j++) {
-                $membre_array[$champs[$j]] = $data[$i][$j];
+                if(isset($data[$i][$j])) {
+                    $membre_array[$champs[$j]] = $data[$i][$j];
+                }
+                else {
+                    $membre_array[$champs[$j]] = '';
+                }
             }
             
             try {
                 $membre = new Data($membre_array);
-                $membre->sendEmailAndGenerateMdp();
                 $membre->setPseudoFromNom();
-
+                if(Manager::instance()->pseudoExiste($membre->getPseudo())) throw new \Exception ('L\'étudiant '.$membre->getNom().' '.$membre->getPrenom().' a déjà été ajouté.');
+                $membre->sendEmailAndGenerateMdp();
                 Manager::instance()->add($membre);
+                \Msg::instance()->add(\Msg::STATUT_SUCCESS, 'L\'étudiant '.$membre->getNom().' '.$membre->getPrenom().' a bien été enregistré.');
             } catch (\Exception $ex) {
                 \Msg::instance()->add(3, 'Erreur ligne '. $i . ' colonne ' . $j . ' : ' . $ex->getMessage());
             }

@@ -163,16 +163,16 @@ class View {
      * return void
      */
     public function ajouter ($f3) {
-        $files = $f3->get('FILES');
-        if(!empty($files)) {
-            try {
-                $file_path = $files['excel_file']['tmp_name'];
-                Manager::instance()->parser($file_path);
-            } catch (\Exception $exc) {
-                \Msg::instance()->add(3, $exc->getMessage());
-            }
-        }
         if(CIA(ADD_MEMBRE)) {
+            $files = $f3->get('FILES');
+            if(!empty($files)) {
+                try {
+                    $file_path = $files['excel_file']['tmp_name'];
+                    Manager::instance()->parser($file_path);
+                } catch (\Exception $exc) {
+                    \Msg::instance()->add(3, $exc->getMessage());
+                }
+            }
             afficherPage('templates/admin/membres/ajouter.htm');
         }
         else

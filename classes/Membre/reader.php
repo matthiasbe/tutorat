@@ -558,7 +558,9 @@ class Spreadsheet_Excel_Reader
 
                                                          }
                                                 }
-                                                $retstr = ($asciiEncoding) ? $retstr : $this->_encodeUTF16($retstr);
+                                                $retstr = ($asciiEncoding) ? iconv('cp1252', $this->_defaultEncoding, $retstr) : $this->_encodeUTF16($retstr);
+//                                                $retstr = iconv("UTF-8", $this->_defaultEncoding, $retstr);
+
 //                                              echo "Str $i = $retstr\n";
                                         if ($richString){
                                                   $spos += 4 * $formattingRuns;
@@ -568,9 +570,9 @@ class Spreadsheet_Excel_Reader
                                                 if ($extendedString) {
                                                   $spos += $extendedRunLength;
                                                 }
-                                                        //if ($retstr == 'Derby'){
-                                                        //      echo "bb\n";
-                                                        //}
+                                                //if ($retstr == 'Derby'){
+                                                //      echo "bb\n";
+                                                //}
                                                 $this->sst[]=$retstr;
                                        }
                     /*$continueRecords = array();

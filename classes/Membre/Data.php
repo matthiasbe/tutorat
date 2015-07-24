@@ -24,7 +24,7 @@ class Data {
             case self::SITUATION_TRIPLANT:
                 return "Triplant";
             case self::SITUATION_TUTEUR:
-                return "Membre du tutorat";
+                return "Membre du Tutorat";
             default:
                 throw new \Exception('Situation "' . $situation_id . '" inconnu.');
         }
@@ -162,12 +162,7 @@ class Data {
      */
 
     public  function setId($id) {
-        if(is_numeric($id)) {
-            $this->id = $id;
-        }
-        else {
-            throw new \Exception('id de membre invalide');
-        }
+        $this->id = $id;
     }
 
 
@@ -252,6 +247,24 @@ class Data {
     public  function setMatieres($matieres) {
         if(is_numeric($matieres)) {
             $this->matieres = $matieres;
+        }
+        elseif(is_string($matieres) && $matieres != '') {
+            $f3 = \Base::instance();
+            $this->setMatieres(0);
+            preg_replace('# #', '', $matieres);
+            $matieres_array = explode(',', $matieres);
+            foreach($matieres_array as $matiere) {
+                if(in_array($matiere, $f3->get('matieres'))) {
+                    $num_matiere = array_flip($f3->get('matieres'))[$matiere];
+                    $this->setMatiere($num_matiere, 1);
+                }
+                else {
+                    throw new \Exception('Matière invalide : ' . $matiere);
+                }
+            }
+        }
+        elseif ($matieres == '') {
+            $this->setMatieres(0);
         }
         else {
             throw new \Exception('matiere invalide : ' . $matieres);
