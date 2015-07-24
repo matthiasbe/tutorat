@@ -9,14 +9,19 @@ namespace Membre;
 class View {
     
     /**
-     * Affiche l'espace membre avec un onglet profil, et un onglet résultats.
+     * Affiche l'espace membre avec un onglet profil, un onglet résultats, et un onglet de modification de mot de passe.
+     * PARAMS.id contient l'id du membre dont on veut afficher le profil.
      * @access public
      * @param \Base $f3
      * @return void
      */
     public function profil($f3) {
         $membre = Manager::instance()->getFromId($f3->get('PARAMS.id'));
-        $est_ce_profil_du_connecte = $f3->get('PARAMS.id') == Manager::instance()->getConnected()->getId();
+        if(Manager::instance()->getConnected()) {
+            $est_ce_profil_du_connecte = $f3->get('PARAMS.id') == Manager::instance()->getConnected()->getId();
+        }
+        else
+            $est_ce_profil_du_connecte = false;
         if(CIA(SEE_PROFILS) || $est_ce_profil_du_connecte) {
             $f3->set('membre', $membre);
 
@@ -158,6 +163,15 @@ class View {
      * return void
      */
     public function ajouter ($f3) {
+        $files = $f3->get('FILES');
+        if(!empty($files)) {
+            try {
+                $file_path = $files['excel_file']['tmp_name'];
+                Manager::instance()->parser($file_path);
+            } catch (\Exception $exc) {
+                \Msg::instance()->add(3, $exc->getMessage());
+            }
+        }
         if(CIA(ADD_MEMBRE)) {
             afficherPage('templates/admin/membres/ajouter.htm');
         }

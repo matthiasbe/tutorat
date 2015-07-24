@@ -85,6 +85,23 @@ class Manager {
         }
     }
     
+    
+    /**
+     * Récupère un statut dans la bdd à partir de son nom.
+     * @param string $nom
+     * @return \Statut\Data Le statut ayant pour nom $nom, NULL sinon.
+     */
+    
+    public function getFromName($nom) {
+        if($this->nomExiste($nom)) {
+            $res_array = $this->db->exec('SELECT * FROM statuts WHERE nom=?', $nom)[0];
+            return new Data($res_array);
+        }
+        else {
+            return $this->getInvite();
+        }
+    }
+    
     /**
      * Récupère le statut et le permission des personnes non connectées.
      * @access public
@@ -126,6 +143,12 @@ class Manager {
     public function idExiste($id) {
         $statut = new \DB\SQL\Mapper($this->db,'statuts');
         $nombre_statuts = $statut->count(array('id=?', $id));
+        return ($nombre_statuts == 1);
+    }
+    
+    public function nomExiste($nom) {
+        $statut = new \DB\SQL\Mapper($this->db,'statuts');
+        $nombre_statuts = $statut->count(array('nom=?', $nom));
         return ($nombre_statuts == 1);
     }
     

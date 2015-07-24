@@ -8,10 +8,42 @@ namespace Membre;
 
 class Data {
     
+    const CHARS_NOM = 'a-zA-Zàâäèéëêïîöôüû -';
+    
     const SITUATION_PRIMANT = 1;
     const SITUATION_DOUBLANT = 2;
     const SITUATION_TRIPLANT= 3;
     const SITUATION_TUTEUR = 4;
+    
+    public static function getSituationName($situation_id) {
+        switch($situation_id) {
+            case self::SITUATION_PRIMANT:
+                return "Primant";
+            case self::SITUATION_DOUBLANT:
+                return "Doublant";
+            case self::SITUATION_TRIPLANT:
+                return "Triplant";
+            case self::SITUATION_TUTEUR:
+                return "Membre du tutorat";
+            default:
+                throw new \Exception('Situation "' . $situation_id . '" inconnu.');
+        }
+    }
+    
+    public static function getSituationId($situation_name) {
+        switch($situation_name) {
+            case "Primant":
+                return self::SITUATION_PRIMANT;
+            case "Doublant":
+                return self::SITUATION_DOUBLANT;
+            case "Triplant":
+                return self::SITUATION_TRIPLANT;
+            case "Membre du tutorat":
+                return self::SITUATION_TUTEUR;
+            default:
+                throw new \Exception('SITUATION "' . $situation_name . '" inconnu.');
+        }
+    }
     
     /**
      * Longueur du mdp aléatoire
@@ -130,7 +162,12 @@ class Data {
      */
 
     public  function setId($id) {
-        $this->id = $id;
+        if(is_numeric($id)) {
+            $this->id = $id;
+        }
+        else {
+            throw new \Exception('id de membre invalide');
+        }
     }
 
 
@@ -151,7 +188,12 @@ class Data {
      */
 
     public  function setPseudo($pseudo) {
-        $this->pseudo = $pseudo;
+        if(preg_match('#^[A-Za-z0-9]*$#', $pseudo)) {
+            $this->pseudo = $pseudo;
+        }
+        else {
+            throw new \Exception('pseudo invalide : '.$pseudo);
+        }
     }
 
     /**
@@ -164,8 +206,8 @@ class Data {
     public  function setPseudoFromNom() {
         $pseudo = strtolower($this->nom) . strtolower($this->prenom)[0];
         $pseudo = preg_replace('#-#', '', $pseudo);
-        $pseudo = preg_replace('#éè#', 'e', $pseudo);
-        $this->pseudo = $pseudo;
+        $pseudo = preg_replace('#[éèêë]#', 'e', $pseudo);
+        $this->setPseudo($pseudo);
     }
 
 
@@ -208,7 +250,12 @@ class Data {
      */
 
     public  function setMatieres($matieres) {
-        $this->matieres = $matieres;
+        if(is_numeric($matieres)) {
+            $this->matieres = $matieres;
+        }
+        else {
+            throw new \Exception('matiere invalide : ' . $matieres);
+        }
     }
 
 
@@ -266,7 +313,12 @@ class Data {
      */
 
     public  function setNom($nom) {
-        $this->nom = $nom;
+        if(preg_match('#^[' . self::CHARS_NOM . ']{2,30}$#', $nom)) {
+            $this->nom = $nom;
+        }
+        else {
+            throw new \Exception('Nom invalide : "' . $nom . '". Charactères acceptés : ' . self::CHARS_NOM . ', Entre 2 et 30 charactères.');
+        }
     }
 
 
@@ -286,7 +338,12 @@ class Data {
      */
 
     public  function setPrenom($prenom) {
-        $this->prenom = $prenom;
+        if(preg_match('#^[' . self::CHARS_NOM . ']{2,30}$#', $prenom)) {
+            $this->prenom = $prenom;
+        }
+        else {
+            throw new \Exception('Prénom invalide : "' . $prenom . '". Charactères acceptés : ' . self::CHARS_NOM . ', Entre 2 et 30 charactères.');
+        }
     }
 
 
@@ -306,7 +363,12 @@ class Data {
      */
 
     public final  function setSite($site) {
-        $this->site = $site;
+        if($site == 'Orsay' OR $site == 'Châtenay') {
+            $this->site = $site;
+        }
+        else {
+            throw new \Exception('Site invalide : ' . $site . '. Mettez Châtenay ou Orsay');
+        }
     }
 
 
@@ -316,16 +378,7 @@ class Data {
      */
 
     public  function getSituation() {
-        switch($this->situation) {
-            case self::SITUATION_PRIMANT:
-                return "Primant";
-            case self::SITUATION_DOUBLANT:
-                return "Doublant";
-            case self::SITUATION_TRIPLANT:
-                return "Triplant";
-            case self::SITUATION_TUTEUR:
-                return "Membre du Tutorat";
-        }
+        return self::getSituationName($this->situation);
     }
     
     public function estTuteur() {
@@ -334,11 +387,19 @@ class Data {
 
     /**
      * @access public
-     * @param string $situation 
+     * @param int|string $situation 
      */
 
     public  function setSituation($situation) {
-        $this->situation = $situation;
+        if(is_numeric($situation)) {
+            $this->situation = $situation;
+        }
+        elseif(is_string($situation)) {
+            $this->setSituation(self::getSituationId($situation));
+        }
+        else {
+            throw new \Exception('Situation invalide : ' . $situation);
+        }
     }
 
 
@@ -358,7 +419,12 @@ class Data {
      */
 
     public final  function setEmail($email) {
-        $this->email = $email;
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->email = $email;
+        }
+        else {
+            throw new \Exception('Email invalide : ' . $email);
+        }
     }
 
 
@@ -378,7 +444,12 @@ class Data {
      */
 
     public  function setPortable($portable) {
-        $this->portable = $portable;
+        if(preg_match('#^0\d([-. ]?\d{2}){4}$#', $portable) OR $portable == '') {
+            $this->portable = $portable;
+        }
+        else {
+            throw new \Exception('Numéro de téléphone invalide : ' . $portable . '. Format attendu : 0123456789');
+        }
     }
 
 
@@ -412,7 +483,12 @@ class Data {
      */
 
     public final  function setStatut($statut) {
-        $this->statut = $statut;
+        if(is_numeric($statut)) {
+            $this->statut = $statut;
+        }
+        elseif(is_string($statut)) {
+            $this->setStatut(\Statut\Manager::instance()->getFromName($statut)->getId());
+        }
     }
 
 
@@ -547,7 +623,7 @@ class Data {
                     . 'A bientôt !<br/>'
                     . 'L\'équipe du tutorat.';
         if(!mail($this->email, 'Vos identifiant pour le tutorat KB', $content, $header)) {
-            echo 'erreur';
+            \Msg::instance()->add(3, 'Erreur lors de l\'envoi de l\'email à '.$this->getPrenom().' '.$this->getNom().'. Veuillez vérifier son adresse email.');
         }
     }
 }

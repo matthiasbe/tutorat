@@ -1,99 +1,23 @@
-<form method="post" action="ajouter/reception">
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="pseudo">Identifiant : </label>
-        </div>
-        <div class="col-lg-10">
-            <input type="text" name="pseudo" class="form-control"/>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="mdp">Mot de passe : </label>
-        </div>
-        <div class="col-lg-10">
-            <input type="password" name="mdp" class="form-control"/>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="nom">Nom : </label>
-        </div>
-        <div class="col-lg-10">
-            <input type="text" name="nom" class="form-control"/>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="prenom">Prénom : </label>
-        </div>
-        <div class="col-lg-10">
-            <input type="text" name="prenom" class="form-control"/>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="email">Email : </label>
-        </div>
-        <div class="col-lg-10">
-            <input type="text" name="email" class="form-control"/>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="portable">Numéro de portable : </label>
-        </div>
-        <div class="col-lg-10">
-            <input type="text" name="portable" class="form-control"/>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="portable">Site : </label>
-        </div>
-        <div class="col-lg-10">
-            <select name="site">
-                <option value="Châtenay">Châtenay</option>
-                <option value="Orsay">Orsay</option>
-            </select>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="portable">Situation : </label>
-        </div>
-        <div class="col-lg-10">
-            <select name="situation">
-                <option value="{{\Membre\Data::SITUATION_PRIMANT}}">Primant</option>
-                <option value="{{\Membre\Data::SITUATION_DOUBLANT}}">Doublant</option>
-                <option value="{{\Membre\Data::SITUATION_TRIPLANT}}">Triplant</option>
-                <option value="{{\Membre\Data::SITUATION_TUTEUR}}">Membre du Tutorat</option>
-            </select>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="portable">Statut : </label>
-        </div>
-        <div class="col-lg-10">
-            <select name="statut">
-                <repeat group="{{\Statut\Manager::instance()->getAll()}}" key="{{@num}}" value="{{@statut}}">
-                    <option value="{{@num}}">{{@statut->getNom()}}</option>
-                </repeat>
-            </select>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-lg-2">
-            <label for="portable">Matières attitrées</label>
-        </div>
-        <div class="col-lg-10">
-        <repeat group="{{ @matieres }}" key="{{@key}}" value="{{@value}}"">
-            <div class="checkbox">
-                <label><input type="checkbox" name="matiere{{@key}}"/>{{@value}}</label>
-            </div>
-        </repeat>
-        </div>
-    </div>
-    <button type="submit" class="btn">Envoyer</button>
-</form>
+<h2>Ajout de membres</h2>
+
+<ul class="nav nav-tabs">
+    <li class="active" data-link="fichier"><a onclick="afficher('fichier')" href="#">Fichier Excel</a></li>
+    <li data-link="formulaire"><a href="#" onclick="afficher('formulaire')">Formulaire</a></li>
+</ul>
+<div class="container-fluid" id="fichier">
+    <include href="templates/admin/membres/ajouter_fichier.htm"/>
+</div>
+<div class="container-fluid" id="formulaire">
+    <include href="templates/admin/membres/ajouter_form.htm"/>
+</div>
+
+<script type="text/javascript">
+    $('#formulaire').hide();
+    
+    function afficher(onglet) {
+        $('#fichier, #formulaire').hide();
+        $('#' + onglet).show();
+        $('li[data-link]').removeClass('active');
+        $('li[data-link='+onglet+']').addClass('active');
+    }
+</script>

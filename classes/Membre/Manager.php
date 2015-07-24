@@ -67,15 +67,13 @@ class Manager {
      * @return void
      */
     public  function add(Data $membre) {
-        if(!$this->idExiste($membre->getId())) {
-            $membre_db = new \DB\SQL\Mapper($this->db,'membres');
-            $membre->remplirMapper($membre_db);
-            $membre->setId(NULL);
-            $membre_db->insert();
-        }
-        else {
-            trigger_error('Impossible d\'ajouter ce membre : Il existe déjà. id : ' . $membre->getId());
-        }
+        if($this->pseudoExiste($membre->getPseudo())) throw new \Exception('L\'identifiant ' . $membre->getPseudo() . ' est déjà utilisé. Veuillez en choisir un autre.');
+        if($this->idExiste($membre->getId())) throw new \Exception('Impossible d\'ajouter l\'étudiant : il existe déjà. Id : ' . $membre->getId());
+            
+        $membre_db = new \DB\SQL\Mapper($this->db,'membres');
+        $membre->remplirMapper($membre_db);
+        $membre->setId(NULL);
+        $membre_db->insert();
     }
 
     /**
@@ -90,7 +88,7 @@ class Manager {
             $membre_db->erase(array('id=?', $membre->getId()));
         }
         else {
-            trigger_error('Impossible de supprimer ce membre : ID inconnu. id : ' . $membre->getId());
+            throw new Exception('Impossible de supprimer ce membre : ID inconnu. id : ' . $membre->getId());
         }
     }
 
@@ -222,5 +220,40 @@ class Manager {
         $perm_other = 'EDIT_OTHER_' . strtoupper($champ); // ex : EDIT_OTHER_PSEUDO
         return (defined($perm_other) AND CIA(constant($perm_other),0)) ||
                 (defined($perm_own) AND CIA(constant($perm_own), 0) AND $profil_du_connecte);
+    }
+    
+    public function parser($file) {
+        require_once('reader.php');
+        
+        $reader = new \Spreadsheet_Excel_Reader();
+        
+        $reader->read($file);
+        
+        $data = $reader->sheets[0]['cells'];
+        // premier indice -> ligne
+        for ($j = 1; $j <= count($data[1]); $j++) {
+            if(method_exists('\Membre\Data', 'set' . ucfirst($data[1][$j]))) {
+                $champs[$j] = strtolower($data[1][$j]);
+            }
+            else
+                throw new \Exception('La colonne n°' . $j . ' n\'a pas un nom valide. Pensez à enlever les accents');
+        }
+        
+        for ($i = 2; $i <= count($data); $i++) {
+            $membre_array = array();
+            for ($j = 1; $j <= count($data[1]); $j++) {
+                $membre_array[$champs[$j]] = $data[$i][$j];
+            }
+            
+            try {
+                $membre = new Data($membre_array);
+                $membre->sendEmailAndGenerateMdp();
+                $membre->setPseudoFromNom();
+
+                Manager::instance()->add($membre);
+            } catch (\Exception $ex) {
+                \Msg::instance()->add(3, 'Erreur ligne '. $i . ' colonne ' . $j . ' : ' . $ex->getMessage());
+            }
+        }
     }
 }
