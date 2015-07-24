@@ -3,24 +3,28 @@
         <th>Numéro</th>
         <th>Nom Prénom</th>
         <th>Statut</th>
+        <th>Matières</th>
     </tr>
     <repeat group="{{ @membres }}" value="{{ @champs }}">
         <check if="{{!@champs->estValide()}}">
             <true>
-                <tr class="warning">
+                <tr class="warning bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
             </true>
             <false>
-                <tr>
+                <tr class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
             </false>
         </check>
-            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
+            <td>
                 {{ @champs->getId()}}
             </td>
-            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
+            <td>
                 {{ @champs->getNomComplet() }}
             </td>
-            <td class="bouton" onclick="document.location='{{ @root }}profil/{{ @champs->getId() }}'">
+            <td>
                 {{ @champs->getStatutObject()->getNom() }}
+            </td>
+            <td>
+                {{ implode(', ', @champs->getMatieresInArray()) }}
             </td>
         </tr>
     </repeat>
