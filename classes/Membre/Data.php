@@ -202,6 +202,11 @@ class Data {
         $pseudo = strtolower($this->nom) . strtolower($this->prenom)[0];
         $pseudo = preg_replace('#-#', '', $pseudo);
         $pseudo = preg_replace('#[éèêë]#', 'e', $pseudo);
+        $pseudo = preg_replace('#[àâä]#', 'a', $pseudo);
+        $pseudo = preg_replace('#[ûü]#', 'u', $pseudo);
+        $pseudo = preg_replace('#[îï]#', 'i', $pseudo);
+        $pseudo = preg_replace('#[ôö]#', 'o', $pseudo);
+        $pseudo = preg_replace('#[- ]#', '', $pseudo);
         $this->setPseudo($pseudo);
     }
 
