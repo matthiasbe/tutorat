@@ -141,6 +141,21 @@ class Manager {
     }
     
     /**
+     * Met à jour le profil contenu dans la variable session.user, si un membre est connecté.
+     * Cela permet de prendre en compte des changement fait sur le profil d'un utilisateur pendant sa session de connexion.
+     * @access public
+     * @return void
+     */
+    public function refreshConnection() {
+        $membre = $this->getConnected();
+        if($membre) {
+            $f3 = \Base::instance();
+            $membre_maj = $this->getFromId($membre->getId());
+            $f3->set('SESSION.user', $membre_maj);
+        }
+    }
+    
+    /**
      * Récupère un membre dans la BDD à partir de son id.
      * @access public
      * @param int $id_membre

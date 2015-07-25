@@ -15,6 +15,8 @@ class Data {
     const SITUATION_TRIPLANT= 3;
     const SITUATION_TUTEUR = 4;
     
+    const STATUT_NON_VALIDE = -1;
+    
     public static function getSituationName($situation_id) {
         switch($situation_id) {
             case self::SITUATION_PRIMANT:
@@ -206,7 +208,7 @@ class Data {
         $pseudo = preg_replace('#[ûü]#', 'u', $pseudo);
         $pseudo = preg_replace('#[îï]#', 'i', $pseudo);
         $pseudo = preg_replace('#[ôö]#', 'o', $pseudo);
-        $pseudo = preg_replace('#[- ]#', '', $pseudo);
+        $pseudo = preg_replace('# #', '', $pseudo);
         $this->setPseudo($pseudo);
     }
 
@@ -304,6 +306,11 @@ class Data {
         $this->mdp = $mdp;
     }
     
+    /**
+     * Génère un mot de passe avec self::MDP_ALEAT_LONGUEUR caractères pris au hasard dans self::MDP_ALEAT_POSSIBLE.
+     * @access public
+     * @return string Le mot de passe généré.
+     */
     public function genererMdp() {
         $mdp = "";
         for ($i = 0; $i < self::MDP_ALEAT_LONGUEUR; $i++) {
@@ -334,7 +341,9 @@ class Data {
 
 
     /**
+     * Vérifie la validité du nom et s'il est valide, hydrate le membre courant.
      * @access public
+     * @throws Exception
      * @param string $nom 
      */
 
@@ -359,7 +368,9 @@ class Data {
 
 
     /**
+     * Vérifie la validité du prénom et s'il est valide, hydrate le membre courant.
      * @access public
+     * @throws Exception
      * @param string $prenom 
      */
 
@@ -384,7 +395,9 @@ class Data {
 
 
     /**
+     * Vérifie la validité du site et s'il est valide, hydrate le membre courant.
      * @access public
+     * @throws Exception
      * @param string $site 
      */
 
@@ -407,6 +420,10 @@ class Data {
         return self::getSituationName($this->situation);
     }
     
+    /**
+     * Permet de déterminer si le membre courant est un membre du tutorat (non étudiant en P1).
+     * @return bool True si le membre courant est un membre du tutorat, d'après self::SITUATION_TUTEUR.
+     */
     public function estTuteur() {
         return $this->situation == self::SITUATION_TUTEUR;
     }
@@ -498,8 +515,12 @@ class Data {
         return \Statut\Manager::instance()->getFromId($this->statut);
     }
     
+    /**
+     * Permet de déterminer si le membre courant a un compte qui à été valider.
+     * @return bool True si le membre courant a un compte valide.
+     */
     public function estValide() {
-        return $this->statut != -1;
+        return $this->statut != self::STATUT_NON_VALIDE;
     }
 
 
@@ -630,6 +651,11 @@ class Data {
         return \Sujets\Manager::instance()->getFromMembre($this);
     }
     
+    /**
+     * Génère un mot de passe pour l'utilisateur et lui envoie par mail avec son identifiant.
+     * @access public
+     * @return void
+     */
     public function sendEmailAndGenerateMdp() {
         ini_set("SMTP", "smtp.tsps.fr");
         ini_set("sendmail_from", "postmaster@tsps.fr");

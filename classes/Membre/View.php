@@ -237,7 +237,7 @@ class View {
                     'site' => $f3->get('POST.site'),
                 ));
             
-                $membre->setStatut(-1);
+                $membre->setStatut(Data::STATUT_NON_VALIDE);
                 $membre->setPseudoFromNom();
                 Manager::instance()->add($membre);
                 \Msg::instance()->add(\Msg::STATUT_SUCCESS, \Msg::INSCRIPTION_SUCCESS);
