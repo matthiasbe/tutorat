@@ -1,10 +1,13 @@
-<table class="table table-hover">
+<table class="table table-hover" id="table_membres">
+    <thead>
     <tr>
         <th>Numéro</th>
         <th>Nom Prénom</th>
         <th>Statut</th>
         <th>Matières</th>
     </tr>
+    </thead>
+    <tbody>
     <repeat group="{{ @membres }}" value="{{ @champs }}">
         <check if="{{!@champs->estValide()}}">
             <true>
@@ -28,4 +31,12 @@
             </td>
         </tr>
     </repeat>
+    </tbody>
 </table>
+
+<script type="text/javascript" src="{{@root}}js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table_membres').DataTable();
+    });
+</script>
