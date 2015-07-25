@@ -15,7 +15,6 @@ $bdd = new Bdd($f3);
 $f3->set('Bdd', $bdd->getDb());
 $f3->set('f3', $f3);
 $f3->set('FILE', __FILE__);
-General::setF3($f3);
 
 /* Fonctions globales qu'on utilise très souvent */
 include('fct_globales.php');

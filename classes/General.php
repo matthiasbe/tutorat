@@ -2,18 +2,13 @@
 
 class General {
     
-    private static $f3;
-    
-    public static function getF3() {
-        return self::$f3;
-    }
-    
-    public static function setF3($f3) {
-        self::$f3 = $f3;
-    }
-    
     public function AfficherAccueil($f3) {
         $f3->set('root', '');
         afficherPage('templates/accueil.htm');
+    }
+    
+    public function AfficherCalendrier($f3) {
+        $f3->set('sujets', \Sujet\Manager::instance()->getAVenir());
+        afficherPage('templates/calendrier.htm');
     }
 }

@@ -121,6 +121,22 @@ class Manager {
     }
     
     /**
+     * Permet de récupérer tous les concours blancs à venir.
+     * @access public
+     * @return array Un tableau de sujets contenant tous les concours blancs à venir.
+     */
+    public function getAVenir() {
+        $sujets = $this->getAll();
+        $archives = array();
+        foreach ($sujets as $key => $sujet) {
+            if($sujet->estAVenir()) {
+                $archives[$key] = $sujet;
+            }
+        }
+        return $archives;
+    }
+    
+    /**
      * @access public
      * @param int $id
      * @return bool true si un sujet avec l'id donné existe et est unique

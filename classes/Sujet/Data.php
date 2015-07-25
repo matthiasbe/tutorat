@@ -109,7 +109,7 @@ class Data {
     }
     
     /**
-     * Détermine si un sujet et sa coorection peuvent être diffusés ou non.
+     * Détermine si un sujet et sa correction peuvent être diffusés ou non.
      * @access public
      * @return bool True si le sujet a déja été distribué.
      */
@@ -123,6 +123,15 @@ class Data {
         return $now[2] > $date_sujet[2] || // année >
                 ($now[2] == $date_sujet[2] && ($now[1] > $date_sujet[1] || // année =, mois >
                                         ($now[1] == $date_sujet[1] && $now[0] > $date_sujet[0]))); // année =, mois =, jour >
+    }
+    
+    /**
+     * Détermine si le sujet doit être affiché dans le calendrier.
+     * @access public
+     * @return bool True si le sujet va être distribué prochainement et doit être affiché dans le calendrier.
+     */
+    public function estAVenir() {
+        return (!$this->estArchive()) && $this->getDate() != '';
     }
     
     /**
