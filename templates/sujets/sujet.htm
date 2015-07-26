@@ -4,8 +4,15 @@
 <a class="btn" href="{{ @sujet->getId() }}/pdf">Télécharger la version PDF</a>
 
 <p>Auteur : {{ \Membre\Manager::instance()->getFromId(@sujet->getAuteurs())->getNomComplet() }}</p>
-<p>Matière : {{@matieres[@sujet->getMatiere()]}}</p>
-<p>Date : {{@sujet->getDate()}}</p>
+<p>
+    Matière : {{@matieres[@sujet->getMatiere()]}}
+</p>
+<p>
+    Date : {{@sujet->getDate()}}
+    <check if="{{CIA(EDIT_SUJET, 0, @sujet)}}">
+        <img title="test" src="{{@root}}files/images/edit.png" class="bouton" onclick="modifier_date()"/>
+    </check>
+</p>
 <p>Le sujet comporte {{@sujet->getNombre_questions()}} questions</p>
 
 <table class="table-striped">
@@ -172,5 +179,21 @@
         }
         else
             alert('Erreur: il s\'agit de la dernière question.');
+    }
+    
+    function modifier_date() {
+        nouvelle_date = prompt('Veuillez indiquer une nouvelle date.');
+        /*$.post('{{@root}}ajax/question/attacher',
+            {
+                question: id,
+                sujet: {{@sujet->getId()}},
+            },
+            function (data) {
+                if(data != '')
+                    alert('Erreur : ' + data);
+                else
+                    document.location.reload();
+            }
+        );*/
     }
 </script>

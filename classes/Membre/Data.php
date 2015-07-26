@@ -40,12 +40,38 @@ class Data {
                 return self::SITUATION_DOUBLANT;
             case "Triplant":
                 return self::SITUATION_TRIPLANT;
-            case "Membre du tutorat":
+            case "Membre du Tutorat":
                 return self::SITUATION_TUTEUR;
             default:
                 throw new \Exception('SITUATION "' . $situation_name . '" inconnu.');
         }
     }
+    
+    const SITE_ORSAY = 1;
+    const SITE_CHATENAY = 2;
+    
+    public static function getSiteNom($site_id) {
+        switch ($site_id) {
+            case self::SITE_ORSAY:
+                return 'Orsay';
+            case self::SITE_CHATENAY:
+                return 'Châtenay';
+            default:
+                throw new \Exception('SITE "' . $site_id . '" inconnu.');
+        }
+    }
+    
+    public static function getSiteId($site_name) {
+        switch (strtolower($site_name)) {
+            case 'orsay':
+                return self::SITE_ORSAY;
+            case 'châtenay' || 'chatenay':
+                return self::SITE_CHATENAY;
+            default:
+                throw new \Exception('SITE "' . $site_name . '" inconnu.');
+        }
+    }
+    
     
     /**
      * Longueur du mdp aléatoire
@@ -390,7 +416,7 @@ class Data {
      */
 
     public  function getSite() {
-        return $this->site;
+        return self::getSiteNom($this->site);
     }
 
 
@@ -402,11 +428,14 @@ class Data {
      */
 
     public final  function setSite($site) {
-        if($site == 'Orsay' OR $site == 'Châtenay') {
+        if(is_numeric($site)) {
             $this->site = $site;
         }
+        elseif (is_string($site)) {
+            $this->site = self::getSiteId($site);
+        }
         else {
-            throw new \Exception('Site invalide : ' . $site . '. Mettez Châtenay ou Orsay');
+            throw new \Exception('Site invalide : ' . $site . '. Mettez Chatenay ou Orsay');
         }
     }
 
