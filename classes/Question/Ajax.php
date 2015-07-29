@@ -182,7 +182,7 @@ class Ajax {
             foreach($resultats as $question) {
                 if($question->getId_sujet() == 0 and $question->getMatiere() == $matiere) {
                     echo '#' . $question->getId() . ' ' . $question->getQuestion() .''
-                        . '<span onclick="attacherQuestion(' . $question->getId() . ')" class="bouton glyphicon glyphicon-resize-small"></span><br/>';
+                        . '<span title="ajouter la question au sujet" onclick="attacherQuestion(' . $question->getId() . ')" class="bouton glyphicon glyphicon-resize-small"></span><br/>';
                 }
             }
         }

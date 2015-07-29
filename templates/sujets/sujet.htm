@@ -216,4 +216,9 @@
             }
         );
     }
+    
+    //autofocus du champ de recherche quand on affiche le modal
+    $('.modal_rechercher').on('shown.bs.modal', function () {
+        $('#recherche_input').focus();
+    })
 </script>
