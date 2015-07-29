@@ -101,3 +101,21 @@ function CIA($perm, $invite = 1, $question_ou_sujet = NULL) {
 function vip() {
     return \Membre\Manager::instance()->getConnected()->getId() == 1;
 }
+
+/**
+ * Retourne la chaîne passée en paramètre en lettres minuscules, sans ses accents, espaces et tirets.
+ * @access public
+ * @param string $chaine La chaîne dont on veut enlever les accents.
+ * @return string La chaîne formatée.
+ */
+function enleverAccents($chaine) {
+    $chaine_formattee = strtolower($chaine);
+    $chaine_formattee = preg_replace('#-#', '', $chaine_formattee);
+    $chaine_formattee = preg_replace('#[éèêë]#', 'e', $chaine_formattee);
+    $chaine_formattee = preg_replace('#[àâä]#', 'a', $chaine_formattee);
+    $chaine_formattee = preg_replace('#[ûü]#', 'u', $chaine_formattee);
+    $chaine_formattee = preg_replace('#[îï]#', 'i', $chaine_formattee);
+    $chaine_formattee = preg_replace('#[ôö]#', 'o', $chaine_formattee);
+    $chaine_formattee = preg_replace('# #', '', $chaine_formattee);
+    return $chaine_formattee;
+}

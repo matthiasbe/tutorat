@@ -33,14 +33,14 @@ class Data {
     }
     
     public static function getSituationId($situation_name) {
-        switch(strtolower($situation_name)) {
+        switch(enleverAccents($situation_name)) {
             case "primant":
                 return self::SITUATION_PRIMANT;
             case "doublant":
                 return self::SITUATION_DOUBLANT;
             case "triplant":
                 return self::SITUATION_TRIPLANT;
-            case "membre du tutorat":
+            case "membredututorat":
                 return self::SITUATION_TUTEUR;
             default:
                 throw new \Exception('SITUATION "' . $situation_name . '" inconnu.');
@@ -62,7 +62,7 @@ class Data {
     }
     
     public static function getSiteId($site_name) {
-        switch (strtolower($site_name)) {
+        switch (enleverAccents($site_name)) {
             case 'orsay':
                 return self::SITE_ORSAY;
             case 'châtenay' || 'chatenay':
@@ -227,14 +227,7 @@ class Data {
      */
 
     public  function setPseudoFromNom() {
-        $pseudo = strtolower($this->nom) . strtolower($this->prenom)[0];
-        $pseudo = preg_replace('#-#', '', $pseudo);
-        $pseudo = preg_replace('#[éèêë]#', 'e', $pseudo);
-        $pseudo = preg_replace('#[àâä]#', 'a', $pseudo);
-        $pseudo = preg_replace('#[ûü]#', 'u', $pseudo);
-        $pseudo = preg_replace('#[îï]#', 'i', $pseudo);
-        $pseudo = preg_replace('#[ôö]#', 'o', $pseudo);
-        $pseudo = preg_replace('# #', '', $pseudo);
+        $pseudo = enleverAccents($this->nom . $this->prenom[0]);
         $this->setPseudo($pseudo);
     }
 
