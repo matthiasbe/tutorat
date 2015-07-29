@@ -197,7 +197,17 @@ class Data {
      * @return bool
      */
     public function estBanquee() {
-        return $this->id_sujet == -1;
+        $sujet = $this->getSujet();
+        return $this->id_sujet == -1 || ($sujet && $sujet->estArchive());
+    }
+    
+    /**
+     * Renvoie l'objet contenant le sujet auquel est rattachée la question.
+     * @access public
+     * @return \Sujet\Data
+     */
+    public function getSujet() {
+        return \Sujet\Manager::instance()->getFromId($this->getId_sujet());
     }
     
     /**

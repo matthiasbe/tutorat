@@ -183,13 +183,14 @@ class Manager {
     }
     
     /**
+     * Selectionne parmis toutes les questions passées en paramètre, celles qui sont banquée.
      * @param array $questions
      * @return array Contient toutes les questions banquées
      */
     public function selectQcms(Array $questions) {
         $qcms = array(); // Le tableau des qcms à renvoyer
         foreach($questions as $key=>$question) {
-            if($question->getId_sujet() == -1) {
+            if($question->estBanquee()) {
                 $qcms[$key] = $question;
             }
         }
