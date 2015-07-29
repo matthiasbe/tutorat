@@ -38,7 +38,7 @@
                 return $.isNumeric(input.val());
                 break;
             case 'date':
-                return (input.val().match('^(0[1-9]|[1-2][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}') || input.val() == '');
+                return (input.val().match('#^(0[1-9]|[1-2][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}') || input.val() == '');
                 break;
             default:
                 return true; // aucunes contraintes pour les autres champs

@@ -10,7 +10,10 @@
 <p>
     Date : {{@sujet->getDate()}}
     <check if="{{CIA(EDIT_SUJET, 0, @sujet)}}">
-        <img title="test" src="{{@root}}files/images/edit.png" class="bouton" onclick="modifier_date()"/>
+        <img src="{{@root}}files/images/edit.png" class="bouton" onclick="modifier_date()" title="Modifier la date de publication"/>
+        <check if="{{@sujet->getDate() != ''}}">
+            <img src="{{@root}}files/images/delete.png" class="bouton" onclick="supprimer_date()" title="Ne pas publier ce sujet."/>
+        </check>
     </check>
 </p>
 <p>Le sujet comporte {{@sujet->getNombre_questions()}} questions</p>
@@ -18,12 +21,12 @@
 <table class="table-striped">
     <repeat group="{{ @questions }}" value="{{ @champs }}">
         <tr>
-            <td><button class="btn" data-toggle="collapse" data-target=".items_question{{@champs->getNumero_question()}}"><span class="glyphicon glyphicon-plus"></span></button></td>
-            <td><a href="{{@root}}sujets/question/{{@champs->getId()}}"><button class="btn" ><span class="glyphicon glyphicon-edit"></span></button></a></td>
-            <td><button onclick="monter({{@champs->getId()}},{{@champs->getNumero_question()}})" class="btn"><span class="glyphicon glyphicon-chevron-up"></span></button></td>
-            <td><button onclick="descendre({{@champs->getId()}},{{@champs->getNumero_question()}})" class="btn"><span class="glyphicon glyphicon-chevron-down"></span></button></td>
+            <td><button title="Afficher les items" class="btn" data-toggle="collapse" data-target=".items_question{{@champs->getNumero_question()}}"><span class="glyphicon glyphicon-plus"></span></button></td>
+            <td><a title="Editer la question" href="{{@root}}sujets/question/{{@champs->getId()}}"><button class="btn" ><span class="glyphicon glyphicon-edit"></span></button></a></td>
+            <td><button title="Echanger cette question avec celle d'au-dessus" onclick="monter({{@champs->getId()}},{{@champs->getNumero_question()}})" class="btn"><span class="glyphicon glyphicon-chevron-up"></span></button></td>
+            <td><button title="Echanger cette question avec celle d'au-dessous" onclick="descendre({{@champs->getId()}},{{@champs->getNumero_question()}})" class="btn"><span class="glyphicon glyphicon-chevron-down"></span></button></td>
             <td><strong>Q{{ @champs->getNumero_question()}} : </strong>{{ abreger(@champs->getQuestion(), 100) }}</td>
-            <td><img onclick="detacherQuestion({{@champs->getNumero_question()}})" class="bouton" src="{{@root}}files/images/delete.png" alt="Supprimer"/></td>
+            <td><img onclick="detacherQuestion({{@champs->getNumero_question()}})" class="bouton" src="{{@root}}files/images/delete.png" alt="Supprimer" title="Détacher cette question du sujet"/></td>
         </tr>
         <repeat group="{{array(1,2,3,4,5)}}" value="{{@num_item}}">
             <tr class="collapse items_question{{@champs->getNumero_question()}}" style="color:{{ @champs->getReponse(@num_item)==0?'red':'green'}};">
@@ -183,10 +186,27 @@
     
     function modifier_date() {
         nouvelle_date = prompt('Veuillez indiquer une nouvelle date.');
-        /*$.post('{{@root}}ajax/question/attacher',
+        if(nouvelle_date) {
+            $.post('{{@root}}ajax/question/modifier_date',
+                {
+                    sujet: {{@sujet->getId()}},
+                    date: nouvelle_date,
+                },
+                function (data) {
+                    if(data != '')
+                        alert('Erreur : ' + data);
+                    else
+                        document.location.reload();
+                }
+            );
+        }
+    }
+    
+    function supprimer_date() {
+        $.post('{{@root}}ajax/question/modifier_date',
             {
-                question: id,
                 sujet: {{@sujet->getId()}},
+                date: '',
             },
             function (data) {
                 if(data != '')
@@ -194,6 +214,6 @@
                 else
                     document.location.reload();
             }
-        );*/
+        );
     }
 </script>

@@ -1,4 +1,9 @@
 <?php
+header("Content-type: application/pdf");
+header('Content-Disposition: inline; filename="Sujet.pdf"');
+header("Content-Transfer-Encoding: binary");
+header('Accept-Ranges: bytes');
+
 // Définition des constantes
 include('liste_permissions.php');
 define('PAGE_ERREUR', 'templates/forbidden.htm');

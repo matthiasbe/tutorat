@@ -145,4 +145,29 @@ class Ajax {
             echo ERREUR;
         }
     }
+    
+    /**
+     * Modifie la date d'un sujet.
+     * POST.sujet id du sujet dont on modifie la date.
+     * POST.date nouvelle date du sujet.
+     * @access public
+     * @param Base $f3
+     * @return void
+     */
+    public function modifierDate($f3) {
+        $sujet = \Sujet\Manager::instance()->getFromId($f3->get('POST.sujet'));
+        $nouvelle_date = $f3->get('POST.date');
+        if(CIA(EDIT_SUJET, 0, $sujet)) {
+            try {
+                $sujet->setDate($nouvelle_date);
+                \Sujet\Manager::instance()->update($sujet);
+            } catch (\Exception $exc) {
+                echo $exc->getMessage();
+            }
+
+        }
+        else {
+            echo ERREUR;
+        }
+    }
 }

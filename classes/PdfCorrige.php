@@ -51,8 +51,8 @@ class PdfCorrige extends Pdf {
         foreach ($questions as $question) {
             $this->question($question);
         }
-
-        return $this->Output('Sujet.pdf', 'I');
+        
+        $this->Output('Corrige.pdf', 'I');
     }
 
     /**

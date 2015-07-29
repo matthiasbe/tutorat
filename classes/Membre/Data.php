@@ -33,14 +33,14 @@ class Data {
     }
     
     public static function getSituationId($situation_name) {
-        switch($situation_name) {
-            case "Primant":
+        switch(strtolower($situation_name)) {
+            case "primant":
                 return self::SITUATION_PRIMANT;
-            case "Doublant":
+            case "doublant":
                 return self::SITUATION_DOUBLANT;
-            case "Triplant":
+            case "triplant":
                 return self::SITUATION_TRIPLANT;
-            case "Membre du Tutorat":
+            case "membre du tutorat":
                 return self::SITUATION_TUTEUR;
             default:
                 throw new \Exception('SITUATION "' . $situation_name . '" inconnu.');

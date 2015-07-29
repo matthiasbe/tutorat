@@ -65,7 +65,10 @@ class Data {
      */
     public function hydrate($donnees) {
         foreach($donnees as $cle=>$valeur) {
-            $this->$cle = $valeur;
+            $setter = 'set' . ucfirst($cle);
+            if(method_exists('\Sujet\Data', $setter)) {
+                $this->$setter($valeur);
+            }
         }
     }
     /**
@@ -78,10 +81,41 @@ class Data {
     
     /**
      * @access public
+     * @param string $id L'id du sujet. Peut être une chaîne de charactère vide. (ajout de sujet)
+     * @throws \Exception
+     * @return void
+     */
+    public function setId($id) {
+        if(is_numeric($id) OR $id == '') {
+            $this->id = $id;
+        }
+        else {
+            throw new \Exception ('Id de sujet invalide : ' . $id);
+        }
+    }
+    
+    /**
+     * @access public
      * @return int
      */
     public function getMatiere() {
         return $this->matiere;
+    }
+    
+    /**
+     * @access public
+     * @param string $matiere La matière sujet. Doit être un entier.
+     * @throws \Exception
+     * @return void
+     */
+    public function setMatiere($matiere) {
+        $f3 = \Base::instance();
+        if($f3->exists('matieres.' . $matiere)) {
+            $this->matiere = $matiere;
+        }
+        else {
+            throw new \Exception ('Matière de sujet invalide : ' . $matiere);
+        }
     }
     
     /**
@@ -94,6 +128,21 @@ class Data {
     
     /**
      * @access public
+     * @param string $auteurs L'id de l'auteur du sujet.
+     * @throws \Exception
+     * @return void
+     */
+    public function setAuteurs($auteurs) {
+        if(is_numeric($auteurs)) {
+            $this->auteurs = $auteurs;
+        }
+        else {
+            throw new \Exception ('Auteurs de sujet invalides : ' . $auteurs);
+        }
+    }
+    
+    /**
+     * @access public
      * @return int
      */
     public function getNumero_cb() {
@@ -102,10 +151,41 @@ class Data {
     
     /**
      * @access public
+     * @param string $num_cb L'id de l'auteur du sujet.
+     * @throws \Exception
+     * @return void
+     */
+    public function setNumero_cb($num_cb) {
+        if(is_numeric($num_cb)) {
+            $this->numero_cb = $num_cb;
+        }
+        else {
+            throw new \Exception ('Numéro de cb invalide : ' . $num_cb);
+        }
+    }
+    
+    /**
+     * @access public
      * @return string
      */
     public function getDate() {
         return $this->date;
+    }
+    
+    /**
+     * Change la date du sujet.
+     * @access public
+     * @param string $date Date au format JJ/MM/AAAA
+     * @throws \Exception
+     * @return void
+     */
+    public function setDate($date) {
+        if(preg_match('#^(0[1-9]|[1-2][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$#', $date) OR $date == '') {
+            $this->date = $date;
+        }
+        else {
+            throw new \Exception ('Format de date invalide. La date doit être au format JJ/MM/AAAA');
+        }
     }
     
     /**
@@ -144,10 +224,40 @@ class Data {
     
     /**
      * @access public
+     * @param string $notions Les notions du sujet.
+     * @throws \Exception
+     * @return void
+     */
+    public function setNotions($notions) {
+        if(is_string($notions)) {
+            $this->notions = $notions;
+        }
+        else {
+            throw new \Exception ('Notions invalides : ' . $notions);
+        }
+    }
+    
+    /**
+     * @access public
      * @return int
      */
     public function getNombre_questions() {
         return $this->nombre_questions;
+    }
+    
+    /**
+     * @access public
+     * @param string $nombre_questions Les notions du sujet.
+     * @throws \Exception
+     * @return void
+     */
+    public function setNombre_questions($nombre_questions) {
+        if(is_string($nombre_questions)) {
+            $this->nombre_questions = $nombre_questions;
+        }
+        else {
+            throw new \Exception ('Nombre de questions invalide : ' . $nombre_questions);
+        }
     }
     
     /**

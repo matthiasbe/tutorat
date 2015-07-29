@@ -39,22 +39,24 @@ class Pdf extends TCPDF {
      */
 
     public function rendu(\Sujet\Data $sujet) {
+        //fatfree base
         $f3 = \Base::instance();
+        // Setting the class attributes
         $this->sujet = $sujet;
         $questions = $sujet->getQuestions();
-
         $this->nomAbrege = 'CB' . $sujet->getNumero_cb();
         $this->numMatiere = $sujet->getMatiere();
         $this->nomMatiere = $f3->get('matieres')[$sujet->getMatiere()];
         
+        // PDF initialisation : author, imagescale
         $this->initialisation();
 
+        // Displaying questions
         $this->premierePage();
         foreach ($questions as $question) {
             $this->question($question);
         }
-
-        return $this->Output('Sujet.pdf', 'I');
+        $this->Output('Sujet.pdf', 'I');
     }
     
     /**

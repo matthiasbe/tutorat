@@ -85,7 +85,6 @@ class View {
         if(CIA(SEE_SUJETS_ET_COR)) {
             $pdf = new \Pdf;
             $pdf->rendu(Manager::instance()->getFromId($f3->get('PARAMS.id')));
-            echo \Template::instance()->render($pdf->rendu($f3, $this));
         }
         else {
             echo ERREUR;
@@ -96,7 +95,6 @@ class View {
         if(CIA(SEE_SUJETS_ET_COR)) {
             $pdf = new \PdfCorrige;
             $pdf->corrige(Manager::instance()->getFromId($f3->get('PARAMS.id')));
-            echo \Template::instance()->render($pdf->rendu($f3, $this));
         }
         else {
             echo ERREUR;
