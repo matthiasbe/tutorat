@@ -70,7 +70,7 @@ class Ajax {
     public function descendreQuestion($f3) {
         $sujet = \Sujet\Manager::instance()->getFromId($f3->get('POST.sujet'));
         $connected = \Membre\Manager::instance()->getConnected();
-        if(CIA(EDIT_SUJETS, 0, $sujet)) {
+        if(CIA(EDIT_SUJET, 0, $sujet)) {
             $question = $sujet->getQuestion($f3->get('POST.num_question'));
             $question_sup = $sujet->getQuestion($f3->get('POST.num_question') + 1);
 
@@ -101,7 +101,7 @@ class Ajax {
     public function monterQuestion($f3) {
         $sujet = \Sujet\Manager::instance()->getFromId($f3->get('POST.sujet'));
         $connected = \Membre\Manager::instance()->getConnected();
-        if(CIA(EDIT_SUJETS, 0, $sujet)) {
+        if(CIA(EDIT_SUJET, 0, $sujet)) {
             $question = $sujet->getQuestion($f3->get('POST.num_question'));
             $question_inf = $sujet->getQuestion($f3->get('POST.num_question') - 1);
 
