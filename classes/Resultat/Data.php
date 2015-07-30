@@ -6,22 +6,20 @@ namespace Resultat;
  * 
  */
 
-class Data {
+class Data extends \Modele\Data {
+    
+    protected function init() {
+        $this->nature = 'Resultat';
+    }
 
     /**
-     * @var int
-     * @access private
-     */
-    private  $id;
-
-    /**
-     * @var \Membre\Data Membre auquel appartient le résultat.
+     * @var int Id du membre auquel appartient le résultat.
      * @access private
      */
     private  $membre;
 
     /**
-     * @var \Sujet\Data Sujet pour lequel on donne le résultat.
+     * @var int id du sujet pour lequel on donne le résultat.
      * @access private
      */
     private  $sujet;
@@ -31,56 +29,6 @@ class Data {
      * @access private
      */
     private  $resultats;
-    
-    /**
-     * Hydrate la classe avec un tableau de valeurs.
-     * @access public
-     * @param array $donnees Doit contenir au moins un champ id ou pseudo. Id est prioritaire.
-     */
-    public function __construct($donnees) {
-        if(!is_array($donnees)) {
-            trigger_error('Pour créer une classe Resultat\Data, un array doit être passé en paramètre.');
-        }
-        $this->hydrate($donnees);
-    }
-
-    /**
-     * @access public
-     * @param Array $donnees
-     */
-    public function hydrate($donnees) {
-        foreach($donnees as $cle=>$valeur) {
-            switch ($cle) {
-                case 'membre':
-                    $this->membre = \Membre\Manager::instance()->getFromId($valeur);
-                    break;
-                case 'sujet':
-                    $this->sujet = \Sujet\Manager::instance()->getFromId($valeur);
-                    break;
-                case 'resultats':
-                    $this->resultats = unserialize($valeur);
-                    break;
-                default:
-                    $this->$cle = $valeur;
-            }
-        }
-    }
-    
-    /**
-     * @access public
-     * @return int
-     */
-    public  function getId() {
-        return $this->id;
-    }
-    /**
-     * @access public
-     * @param int $id 
-     */
-
-    public  function setId($id) {
-        $this->id = $id;
-    }
 
 
     /**
@@ -89,18 +37,23 @@ class Data {
      */
 
     public  function getMembre() {
-        return $this->membre;
+        return \Membre\Manager::instance()->getFromId($this->membre);
     }
 
 
     /**
      * 	
      * @access public
-     * @param \Membre\Data $membre 
+     * @param mixed $membre 
      */
 
-    public  function setPseudo(\Membre\Data $membre) {
-        $this->membre = $membre;
+    public  function setMembre($membre) {
+        if(is_a($membre, '\Membre\Data')) {
+            $this->membre = $membre->getId();
+        }
+        elseif(is_string($membre)) {
+            $this->membre = $membre;
+        }
     }
 
 
@@ -110,17 +63,22 @@ class Data {
      */
 
     public  function getSujet() {
-        return $this->sujet;
+        return \Sujet\Manager::instance()->getFromId($this->sujet);
     }
 
 
     /**
      * @access public
-     * @param \Sujet\Data $sujet 
+     * @param mixed $sujet 
      */
 
-    public  function setSujet(\Sujet\Data $sujet) {
-        $this->sujet = $sujet;
+    public  function setSujet($sujet) {
+        if(is_a($sujet, '\Sujet\Data')) {
+            $this->sujet = $sujet->getId();
+        }
+        elseif(is_string($sujet)) {
+            $this->sujet = $sujet;
+        }
     }
 
 
@@ -131,7 +89,12 @@ class Data {
      */
 
     public  function setResultats($resultats) {
-        $this->resultats = $resultats;
+        if(is_string($resultats)) {
+            $this->resultats = $resultats;
+        }
+        else {
+            $this->resultats = serialize($resultats);
+        }
     }
 
 
@@ -141,7 +104,7 @@ class Data {
      */
 
     public  function getResultats() {
-        return $this->resultats;
+        return unserialize($this->resultats);
     }
 
 
@@ -154,7 +117,7 @@ class Data {
     public  function getNote() {
         $note = 0;
         $total = 0;
-        foreach($this->resultats as $cle => $reponse) {
+        foreach($this->getResultats() as $cle => $reponse) {
             $question = \Question\Manager::instance()->getFromNum($this->getSujet()->getId(), $cle);
             $correction = $question->getReponses();
             $note += $this->comparerReponses($reponse, $correction);
@@ -185,30 +148,6 @@ class Data {
      */
 
     public  function getResultatsSerialized() {
-        return serialize($this->resultats);
-    }
-    
-    /**
-     * Remplit un Mapper SQL avec les éléments de l'objet courant.
-     * @access public
-     * @param \DB\SQL\Mapper $mapper
-     * @return void
-     */
-    public function remplirMapper(\DB\SQL\Mapper $mapper) {
-        foreach ($this as $key=>$value) { // On parcourt tous les éléments de l'objet courant
-            switch ($key) {
-                case 'resultats':
-                    $mapper->resultats = $this->getResultatsSerialized();
-                    break;
-                case 'membre' :
-                    $mapper->membre = $this->getMembre()->getId();
-                    break;
-                case 'sujet' :
-                    $mapper->sujet = $this->getSujet()->getId();
-                    break;
-                default :
-                    $mapper->$key = $value;
-            }
-        }
+        return $this->resultats;
     }
 }

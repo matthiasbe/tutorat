@@ -6,8 +6,10 @@ namespace Question;
  * Classe contenant les données d'une question
  */
 
-class Data {
-    protected $id;
+class Data extends \Modele\Data {
+    protected function init() {
+        $this->nature = 'Question';
+    }
     protected $numero_question;
     protected $id_sujet;
     protected $matiere;
@@ -21,11 +23,6 @@ class Data {
     protected $reponse;
     protected $items;
     protected $date;
-    
-    public function __construct($donnees) {
-        if(!is_array($donnees)) trigger_error('Pour créer une classe Question\Data, un array doit être passé en paramètre. Ici on a donné : ' . var_dump($donnees));
-        $this->hydrate($donnees);
-    }
     
     public function hydrate($donnees) {
         $this->initItems();
@@ -59,10 +56,6 @@ class Data {
     
     public function incrNumQuestion() {
         $this->numero_question++;
-    }
-    
-    public function getId() {
-        return $this->id;
     }
     
     public function getId_sujet() {

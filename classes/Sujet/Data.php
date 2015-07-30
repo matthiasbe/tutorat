@@ -6,13 +6,10 @@ namespace Sujet;
  * Classe contenant les données d'une question
  */
 
-class Data {
-    
-    /**
-     * @var int 
-     * @access private
-     */
-    private $id;
+class Data extends \Modele\Data {
+    protected function init() {
+        $this->nature = 'Sujet';
+    }
     
     /**
      * @var int 
@@ -49,50 +46,6 @@ class Data {
      * @access private
      */
     private $notions;
-    
-    /**
-     * @access public
-     * @param Array $donnees
-     */
-    public function __construct($donnees) {
-        if(!is_array($donnees)) trigger_error('Pour créer une classe Sujet\Data, un array doit être passé en paramètre.');
-        $this->hydrate($donnees);
-    }
-    
-    /**
-     * @access public
-     * @param Array $donnees
-     */
-    public function hydrate($donnees) {
-        foreach($donnees as $cle=>$valeur) {
-            $setter = 'set' . ucfirst($cle);
-            if(method_exists('\Sujet\Data', $setter)) {
-                $this->$setter($valeur);
-            }
-        }
-    }
-    /**
-     * @access public
-     * @return int
-     */
-    public function getId() {
-        return $this->id;
-    }
-    
-    /**
-     * @access public
-     * @param string $id L'id du sujet. Peut être une chaîne de charactère vide. (ajout de sujet)
-     * @throws \Exception
-     * @return void
-     */
-    public function setId($id) {
-        if(is_numeric($id) OR $id == '') {
-            $this->id = $id;
-        }
-        else {
-            throw new \Exception ('Id de sujet invalide : ' . $id);
-        }
-    }
     
     /**
      * @access public
@@ -284,18 +237,6 @@ class Data {
      */
     public function decrNbrQuestions() {
         $this->nombre_questions--;
-    }
-    
-    /**
-     * remplit un Mapper avec les champs du sujet
-     * @access public
-     * @param \DB\SQL\Mapper $mapper
-     * @return void
-     */
-    public function remplirMapper(\DB\SQL\Mapper $mapper) {
-        foreach ($this as $key=>$value) {
-            $mapper->$key = $value;
-        }
     }
     
     /**

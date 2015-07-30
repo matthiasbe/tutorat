@@ -6,7 +6,7 @@ namespace Membre;
  * Structure accueillant les différents enregistrement de la table 'membres' contenant les différents membre inscrits au site.
  */
 
-class Data {
+class Data extends \Modele\Data {
     
     const CHARS_NOM = 'a-zA-Zàâäèéëêïîöôüû -';
     
@@ -40,7 +40,7 @@ class Data {
                 return self::SITUATION_DOUBLANT;
             case "triplant":
                 return self::SITUATION_TRIPLANT;
-            case "membredututorat":
+            case "membre du tutorat":
                 return self::SITUATION_TUTEUR;
             default:
                 throw new \Exception('SITUATION "' . $situation_name . '" inconnu.');
@@ -78,12 +78,6 @@ class Data {
      */
     const MDP_ALEAT_LONGUEUR = 8;
     const MDP_ALEAT_POSSIBLE = 'abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    /**
-     * @var int
-     * @access protected
-     */
-    protected  $id;
 
     /**
      * @var string
@@ -148,51 +142,9 @@ class Data {
      */
     protected  $statut;
 
-    /**
-     * Hydrate la classe avec un tableau de valeurs.
-     * @access public
-     * @param array $donnees Doit contenir au moins un champ id ou pseudo. Id est prioritaire.
-     */
-    public function __construct($donnees) {
-        if(!is_array($donnees)) {
-            trigger_error('Pour créer une classe Membre\Data, un array doit être passé en paramètre.');
-        }
-        $this->hydrate($donnees);
+    protected function init() {
+        $this->nature = 'Membre';
     }
-
-    /**
-     * @access public
-     * @param Array $donnees
-     */
-    public function hydrate($donnees) {
-        foreach($donnees as $cle=>$valeur) {
-            $setter = 'set' . ucfirst($cle);
-            if(method_exists('\Membre\Data', $setter)) {
-                $this->$setter($valeur);
-            }
-        }
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function getId() {
-        return $this->id;
-    }
-
-
-    /**
-     * @access public
-     * @param int $id 
-     */
-
-    public  function setId($id) {
-        $this->id = $id;
-    }
-
 
     /**
      * @access public
@@ -227,7 +179,7 @@ class Data {
      */
 
     public  function setPseudoFromNom() {
-        $pseudo = enleverAccents($this->nom . $this->prenom[0]);
+        $pseudo = enleverAccents(enleverEspaces(enleverTirets(strtolower($this->nom . $this->prenom[0]))));
         $this->setPseudo($pseudo);
     }
 
@@ -614,18 +566,6 @@ class Data {
             }
         }
         return $matieres;
-    }
-    
-    /**
-     * remplit un Mapper avec les champs du membre
-     * @access public
-     * @param \DB\SQL\Mapper $mapper
-     * @return void
-     */
-    public function remplirMapper(\DB\SQL\Mapper $mapper) {
-        foreach ($this as $key=>$value) {
-            $mapper->$key = $value;
-        }
     }
     
     /**

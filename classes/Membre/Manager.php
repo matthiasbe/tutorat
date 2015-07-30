@@ -6,42 +6,20 @@ namespace Membre;
  * 
  */
 
-class Manager {
+class Manager extends \Modele\Manager {
     
-    /**
-     * @var \DB\SQL
-     */
-    private $db;
-    
-    /**
-     * @var self
-     */
-    private static $instance;
-    
-    private function __construct() {
-        $this->db = \Base::instance()->get('Bdd');
+    protected function init() {
+        $this->nature = 'Membre';
+        $this->table = 'membres';
     }
-
-    /**
-     * Renvoie l'instance unique de la classe manager. Il faut passer par cette appel pour se servir des fonctions de la classe.
-     * Cf classe singleton.
-     * @access public
-     * @return self
-     */
-    public static function instance() {
-        if(!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
+    
     /**
      * Met à jour un membre de la BDD. Renvoie une erreur s'il a une idée non existante.
      * @access public
      * @param Data $membre le membre à mettre à jour
      * @return void
      */
-    public  function update(Data $membre) {
+    public  function update($membre) {
         if($this->idExiste($membre->getId())) {
             $membre_db = new \DB\SQL\Mapper($this->db,'membres');
             $membre_db->load(array('id=?', $membre->getId()));
@@ -66,7 +44,7 @@ class Manager {
      * @param Data $membre le membre à mettre à jour
      * @return void
      */
-    public  function add(Data $membre) {
+    public  function add($membre) {
         if($this->pseudoExiste($membre->getPseudo())) throw new \Exception('L\'identifiant ' . $membre->getPseudo() . ' est déjà utilisé. Veuillez en choisir un autre.');
         if($this->idExiste($membre->getId())) throw new \Exception('Impossible d\'ajouter l\'étudiant : il existe déjà. Id : ' . $membre->getId());
             
@@ -74,22 +52,6 @@ class Manager {
         $membre->remplirMapper($membre_db);
         $membre->setId(NULL);
         $membre_db->insert();
-    }
-
-    /**
-     * Suppression d'un membre de la BDD. Renvoie une erreur si il à une ID existante.
-     * @access public
-     * @param Data $membre le membre à mettre à jour
-     * @return void
-     */
-    public  function delete(Data $membre) {
-        if($this->idExiste($membre->getId())) {
-            $membre_db = new \DB\SQL\Mapper($this->db,'membres');
-            $membre_db->erase(array('id=?', $membre->getId()));
-        }
-        else {
-            throw new\Exception('Impossible de supprimer ce membre : ID inconnu. id : ' . $membre->getId());
-        }
     }
 
 
@@ -156,22 +118,6 @@ class Manager {
     }
     
     /**
-     * Récupère un membre dans la BDD à partir de son id.
-     * @access public
-     * @param int $id_membre
-     * @return \Membre\Data Null si le membre n'existe pas.
-     */
-    
-    public function getFromId($id_membre) {
-        if($this->idExiste($id_membre)) {
-            $membre_array = $this->db->exec('SELECT * FROM membres WHERE id=?', $id_membre)[0];
-            return new Data($membre_array);
-        }
-        else
-            return NULL;
-    }
-    
-    /**
      * Récupère un membre dans la BDD à partir de son pseudo.
      * @access public
      * @param string $pseudo
@@ -186,31 +132,6 @@ class Manager {
         else {
             return NULL;
         }
-    }
-    
-    /**
-     * Renvoie tous les membre de la table.
-     * @access public
-     * @return \Membre\Data
-     */
-    public function getAll() {
-        $membre_array = $this->db->exec('SELECT * FROM membres');
-        $membres = array();
-        foreach($membre_array as $key=>$membre) {
-            $membres[$key] = new Data($membre);
-        }
-        return $membres;
-    }
-    
-    /**
-     * @access public
-     * @param int $id
-     * @return bool true si un membre avec l'id donné existe et est unique
-     */
-    public function idExiste($id) {
-        $membre = new \DB\SQL\Mapper($this->db,'membres');
-        $nbr_resultats = $membre->count(array('id=?', $id));
-        return ($nbr_resultats == 1);
     }
     
     /**

@@ -110,12 +110,18 @@ function vip() {
  */
 function enleverAccents($chaine) {
     $chaine_formattee = strtolower($chaine);
-    $chaine_formattee = preg_replace('#-#', '', $chaine_formattee);
     $chaine_formattee = preg_replace('#[éèêë]#', 'e', $chaine_formattee);
     $chaine_formattee = preg_replace('#[àâä]#', 'a', $chaine_formattee);
     $chaine_formattee = preg_replace('#[ûü]#', 'u', $chaine_formattee);
     $chaine_formattee = preg_replace('#[îï]#', 'i', $chaine_formattee);
     $chaine_formattee = preg_replace('#[ôö]#', 'o', $chaine_formattee);
-    $chaine_formattee = preg_replace('# #', '', $chaine_formattee);
     return $chaine_formattee;
+}
+
+function enleverEspaces($chaine) {
+    return preg_replace('# #', '', $chaine);
+}
+
+function enleverTirets($chaine) {
+    return preg_replace('#-#', '', $chaine);
 }

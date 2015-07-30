@@ -6,78 +6,11 @@ namespace Resultat;
  * 
  */
 
-class Manager {
+class Manager extends \Modele\Manager {
     
-    /**
-     * @var \DB\SQL
-     */
-    private $db;
-    
-    /**
-     * @var self
-     */
-    private static $instance;
-    
-    private function __construct() {
-        $this->db = \Base::instance()->get('Bdd');
-    }
-
-    /**
-     * Renvoie l'instance unique de la classe manager. Il faut passer par cette appel pour se servir des fonctions de la classe.
-     * Cf classe singleton.
-     * @access public
-     * @return self
-     */
-    public static function instance() {
-        if(!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-
-    /**
-     * @access public
-     * @param Data $resultat le membre à mettre à jour. Ce résultat doit déjà exister dans la BDD.
-     * @return void
-     */
-
-    public  function update($resultat) {
-        trigger_error('la fonction update results n\'est pas encore défnie');
-        if(!idExiste($resultat->getId())) trigger_error ('Fonction UPDATE sur un résultat n\'existant pas dans la BDD.');
-
-    }
-
-
-    /**
-     * Enregistre un nouveau résultat dans la base de données.
-     * @access public
-     * @param Data $resultat Le résultat à ajouter.
-     * @return
-     */
-
-    public  function add($resultat) {
-        if($this->idExiste($resultat->getId())) trigger_error ('Fonction ADD sur un résultat existant déjà dans la BDD.');
-        
-        $res_db = new \DB\SQL\Mapper($this->db, 'resultats');
-        $resultat->remplirMapper($res_db);
-        $res_db->save();
-    }
-    
-    /**
-     * Récupère un résultat dans la bdd à partir de son ID.
-     * @param int $id_res
-     * @return \Membre\Data Le résultat ayant pour id $id_res, NULL sinon.
-     */
-    
-    public function getFromId($id_res) {
-        if($this->idExiste($id_res)) {
-            $res_array = $this->db->exec('SELECT * FROM resultats WHERE id=?', $id_res)[0];
-            return new Data($res_array);
-        }
-        else {
-            return NULL;
-        }
+    protected function init() {
+        $this->nature = 'Resultat';
+        $this->table = 'resultats';
     }
     
     /**
@@ -88,28 +21,12 @@ class Manager {
     
     public function getFromMembre($id_membre) {
         if(\Membre\Manager::instance()->idExiste($id_membre)) {
-            $resultats = array();
             $res_array = $this->db->exec('SELECT * FROM resultats WHERE membre=?', $id_membre);
-            foreach($res_array as $key=>$res) {
-                $resultats[$key] = new Data($res);
-            }
-            return $resultats;
+            return $this->results2objects($res_array);
         }
         else {
-            trigger_error('Membre inconnu. (fonction getFromMembre');
+            trigger_error('Membre inconnu. (fonction getFromMembre)');
         }
-    }
-    
-    /**
-     * Détermine si un résultat existe ou non dans la BDD.
-     * @access public
-     * @param int $id
-     * @return bool True si un résultat avec l'id donné existe et est unique
-     */
-    public function idExiste($id) {
-        $resultat = new \DB\SQL\Mapper($this->db,'resultats');
-        $nombre_resultats = $resultat->count(array('id=?', $id));
-        return ($nombre_resultats == 1);
     }
     
     /**
