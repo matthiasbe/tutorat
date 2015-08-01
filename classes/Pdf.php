@@ -44,7 +44,7 @@ class Pdf extends TCPDF {
         // Setting the class attributes
         $this->sujet = $sujet;
         $questions = $sujet->getQuestions();
-        $this->nomAbrege = 'CB' . $sujet->getNumero_cb();
+        $this->nomAbrege = $sujet->getNumero_cb();
         $this->numMatiere = $sujet->getMatiere();
         $this->nomMatiere = $f3->get('matieres')[$sujet->getMatiere()];
         
@@ -80,7 +80,7 @@ class Pdf extends TCPDF {
         $this->image($image_file,0,5,60,'','JPG','','T',false,'','L');
         $this->SetFont('helvetica', 'B', 8);
         $this->writeHTMLCell('','',180,5,'Tutorat<br/>Santé<br/>Paris-Sud', 'L');
-        $this->writeHTMLCell('','',168,5,$this->nomAbrege . '<br/>' . $this->nomMatiere);
+        $this->writeHTMLCell('20','20',158,5,$this->nomAbrege . '<br/>' . $this->nomMatiere, '', 0, 0, 1, 'R');
     }
 
     /**

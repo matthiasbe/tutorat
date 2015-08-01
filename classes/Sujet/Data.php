@@ -8,6 +8,9 @@ namespace Sujet;
 
 class Data extends \Modele\Data {
     
+    const TYPE_CB_PRERENTREE = -1;
+    const TYPE_CB_CBG = -2;
+    
     /**
      * @var int 
      * @access private
@@ -96,7 +99,14 @@ class Data extends \Modele\Data {
      * @return int
      */
     public function getNumero_cb() {
-        return $this->numero_cb;
+        switch($this->numero_cb) {
+            case self::TYPE_CB_PRERENTREE:
+                return 'Pré-rentrée';
+            case self::TYPE_CB_CBG;
+                return 'CB Général';
+            default:
+                return 'CB' . $this->numero_cb;
+        }
     }
     
     /**

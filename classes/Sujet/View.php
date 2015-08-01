@@ -109,10 +109,11 @@ class View {
      * @return void
      */
     public function receptionAjout($f3) {
+        $num_cb = $f3->get('POST.type_cb')?$f3->get('POST.type_cb'):$f3->get('POST.numero_cb');
         if(CIA(ADD_SUJET)) {
             $sujet = new Data(array(
                     'matiere' => $f3->get('POST.matiere'),
-                    'numero_cb' => $f3->get('POST.numero_cb'),
+                    'numero_cb' => $num_cb,
                     'nombre_questions' => 0,
                     'date' => $f3->get('POST.date'),
                     'notions' => $f3->get('POST.notions'),
