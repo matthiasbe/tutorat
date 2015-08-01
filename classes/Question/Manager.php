@@ -13,6 +13,20 @@ class Manager extends \Modele\Manager {
         $this->table = 'questions';
     }
     
+    protected function beforeAdd($question) {
+        $type = \Alerte\Data::ALERT_TYPE_CREATION;
+        $last_id = $this->getLastInserted(); // TODO
+        $membres = \Membre\Manager::instance()->getAll();
+        $alerte = new \Alerte\Data(array(
+            'contenu_id' => $question->getId(),
+            'contenu_classe' => 'question',
+            'type' => $type,
+            'membres' => $membres
+        ));
+        print_r($question);
+        \Alerte\Manager::instance()->add($alerte);
+    }
+    
     /**
      * @access public
      * @param int $id_sujet

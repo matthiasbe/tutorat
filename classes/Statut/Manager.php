@@ -110,4 +110,8 @@ class Manager extends \Modele\Manager {
             case ADD_MEMBRE: return 'Enregistrer des <strong>comptes</strong> étudiants';
         }
     }
+    
+    protected function getMembreANotifier($statut) {
+        return array();
+    }
 }

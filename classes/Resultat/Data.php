@@ -8,27 +8,23 @@ namespace Resultat;
 
 class Data extends \Modele\Data {
     
-    protected function init() {
-        $this->nature = 'Resultat';
-    }
-
     /**
      * @var int Id du membre auquel appartient le résultat.
      * @access private
      */
-    private  $membre;
+    protected  $membre;
 
     /**
      * @var int id du sujet pour lequel on donne le résultat.
      * @access private
      */
-    private  $sujet;
+    protected  $sujet;
 
     /**
      * @var array tableau d'entier avec le numero de la question en indice et le résultat aux item sur 5 bits correspondant.
      * @access private
      */
-    private  $resultats;
+    protected  $resultats;
 
 
     /**

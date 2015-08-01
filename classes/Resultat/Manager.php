@@ -77,5 +77,8 @@ class Manager extends \Modele\Manager {
             $this->add($resultat);
         }
     }
-
+    
+    protected function getMembreANotifier($resultat) {
+        return array();
+    }
 }

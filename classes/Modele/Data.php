@@ -15,20 +15,18 @@ abstract class Data {
     protected $id;
     
     /**
-     * Le dossier contenant la classe fille : Résultat, Question etc...
-     * @var string
+     * @return string Le namespace dans lequel on se trouve.
      */
-    protected $nature;
+    protected function getNamespace() {
+        return explode('\\', get_class($this))[0];
+    }
     
     public function __construct($donnees) {
         if(!is_array($donnees)) {
-            trigger_error('Pour créer une classe \\' . $this->nature . '\\Data, un array doit être passé en paramètre.');
+            trigger_error('Pour créer une classe \\' . $this->getNamespace() . '\\Data, un array doit être passé en paramètre.');
         }
-        $this->init();
         $this->hydrate($donnees);
     }
-    
-    abstract protected function init();
 
     /**
      * Hydrate la classe avec le tableau passée en paramètre.
@@ -39,7 +37,7 @@ abstract class Data {
     public function hydrate($donnees) {
         foreach($donnees as $cle=>$valeur) {
             $setter = 'set' . ucfirst($cle);
-            if(method_exists('\\' . $this->nature . '\\Data', $setter)) {
+            if(method_exists('\\' . $this->getNamespace() . '\\Data', $setter)) {
                 $this->$setter($valeur);
             }
         }

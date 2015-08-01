@@ -17,7 +17,7 @@
         <label for="date">Date : </label>
         <input type="text" name="date" class="form-control"/>
         <p>Au format jj/mm/yyyy. Le lendemain de cette date, le sujet sera publié dans la section sujets/corrigés. Laisser
-        vide pour que le sujet ne soit pas publier.</p>
+        vide pour que le sujet ne soit pas publié.</p>
     </div>
     <div class="form-group">
         <label for="notions">Notions traitées: </label>
@@ -38,7 +38,7 @@
                 return $.isNumeric(input.val());
                 break;
             case 'date':
-                return (input.val().match('#^(0[1-9]|[1-2][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}') || input.val() == '');
+                return (input.val().match('^(0?[1-9]|[1-2][0-9]|3[01])/(0?[1-9]|1[012])/[0-9]{4}$') || input.val() == '');
                 break;
             default:
                 return true; // aucunes contraintes pour les autres champs

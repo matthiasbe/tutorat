@@ -7,23 +7,20 @@ namespace Statut;
  */
 
 class Data extends \Modele\Data {
-    protected function init() {
-        $this->nature = 'Statut';
-    }
     
     /**
      * Le nom du statut.
      * @access private
      * @var string
      */
-    private $nom;
+    protected $nom;
     
     /**
      * Un entier sur 64 bits contenant les différentes permissions d'un statut.
      * @access private
      * @var bigint
      */
-    private $permissions;
+    protected $permissions;
     
     /**
      * Renvoie le nom du statut courant.

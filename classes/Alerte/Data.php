@@ -10,14 +10,6 @@ class Data extends \Modele\Data {
     const ALERT_TYPE_MODIF = 1;
     const ALERT_TYPE_CREATION = 2;
     
-    public function getNature() {
-        return $this->nature;
-    }
-    
-    protected function init() {
-        $this->nature = 'Alerte';
-    }
-    
     
     /**
      * Le de l'alerte. Voir constantes de la classe ALERT_TYPE_XXXX. Modification ou création.
@@ -25,25 +17,25 @@ class Data extends \Modele\Data {
      * Création : on crée du nouveau contenu.
      * @var int
      */
-    private $type;
+    protected $type;
     
     /**
      * L'id du contenu qui à été modifier.
      * @var int
      */
-    private $contenu_id;
+    protected $contenu_id;
     /**
      * La classe du contenu, vaut Data de Membre, Sujet, Question ou Resultat.
      * @var string.
      */
-    private $contenu_classe;
+    protected $contenu_classe;
     
     /**
      * Array contenant en index les id des membres visés par la notification et en valeur
      * un bouléen qui vaut true si il n'ont pas encore vu la notif, false sinon.
-     * @var array
+     * @var string
      */
-    private $membres = array();
+    protected $membres;
     
     public function getType() {
         return $this->type;
@@ -54,7 +46,7 @@ class Data extends \Modele\Data {
             $this->type = $type;
         }
         else
-            throw new Exception ('Type invalide : ' . $id);
+            throw new \Exception ('Type invalide : ' . $id);
     }
     
     public function getContenu() {
@@ -69,15 +61,15 @@ class Data extends \Modele\Data {
             $this->contenu_id = $contenu_id;
         }
         else
-            throw new Exception ('Id de contenu invalide : ' . $contenu_id);
+            throw new \Exception ('Id de contenu invalide : ' . $contenu_id);
     }
     
-    public function setContenu_nature($nature) {
-        if(class_exists($nature)) {
+    public function setContenu_classe($nature) {
+        if(class_exists('\\' . $nature . '\\Data')) {
             $this->contenu_classe = $nature;
         }
         else
-            throw new Exception ('Nature de contenu invalide, classe inconnue : ' . $nature);
+            throw new \Exception ('Nature de contenu invalide, classe inconnue : ' . $nature);
     }
     
     /**
@@ -86,7 +78,21 @@ class Data extends \Modele\Data {
      * @return Array un tableau contenant tous les membres visés en indices.
      */
     public function getMembres() {
-        return $this->membres;
+        return unserialize($this->membres);
+    }
+    
+    public function setMembres($membres) {
+        if(is_string($membres)) {
+            $this->membres = $membres;
+        }
+        elseif(is_array($membres)) {
+            foreach($membres as $membre) {
+                $array_id[$membre->getId()] = 1;
+            }
+            $this->membres = serialize($array_id);
+        }
+        else
+            throw new \Exception('Membre invalide.');
     }
     
     /**
@@ -96,7 +102,9 @@ class Data extends \Modele\Data {
      * @return void
      */
     public function addMembre(\Membre\Data $membre) {
-        $this->membres[$membre->getId()] = 1;
+        $membres = $this->getMembres();
+        $membres[$membre] = 1;
+        $this->setMembres($membres);
     }
     
     /**
@@ -107,34 +115,24 @@ class Data extends \Modele\Data {
      * @return void
      */
     public function removeMembre(\Membre\Data $membre) {
-        if(!in_array($membre->getId(), $this->membres)) throw new \Exception('Le membre ne fait pas partie des membres visés par la notification.');
-        $array_index = array_flip($this->membres)[$membre->getId()];
-        
-        unset($this->membres[$array_index]);
-    }
-    
-    /**
-     * Permet de mettre une liste de membre serializés comme bénéficiaires de la notif.
-     * @access public
-     * @param mixed $membres Un tableau qui peut être serializé.
-     * @return void
-     */
-    public function setMembres($membres) {
-        if(is_array($membres)) {
-            $this->membres = $membres;
-        }
-        elseif(is_string($membres)) {
-            $this->membres = unserialize($membres);
-        }
+        if(!in_array($membre->getId(), $this->getMembres())) throw new \Exception('Le membre ne fait pas partie des membres visés par la notification.');
+        $array_index = array_flip($this->getMembres())[$membre->getId()];
+        $membres = $this->getMembres();
+        unset($membres[$array_index]);
+        $this->setMembres($membres);
     }
     
     public function membreALu(\Membre\Data $membre) {
-        if(!in_array($membre->getId(), $this->membres)) throw new \Exception('Le membre ne fait pas partie des membres visés par la notification.');
-        $this->membres[$membre->getId()] = 0;
+        if(!in_array($membre->getId(), $this->getMembres())) throw new \Exception('Le membre ne fait pas partie des membres visés par la notification.');
+        $membres = $this->getMembres();
+        $membres[$membre->getId()] = 0;
+        $this->setMembres($membres);
     }
     
     public function membreAPasLu(\Membre\Data $membre) {
-        if(!in_array($membre->getId(), $this->membres)) throw new \Exception('Le membre ne fait pas partie des membres visés par la notification.');
-        $this->membres[$membre->getId()] = 1;
+        if(!in_array($membre->getId(), $this->getMembres())) throw new \Exception('Le membre ne fait pas partie des membres visés par la notification.');
+        $membres = $this->getMembres();
+        $membres[$membre->getId()] = 1;
+        $this->setMembres($membres);
     }
 }

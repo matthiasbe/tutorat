@@ -251,4 +251,7 @@ class View {
         }
     }
     
+    public function panel() {
+        afficherPage('templates/admin/panel.htm');
+    }
 }

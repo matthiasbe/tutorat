@@ -103,4 +103,8 @@ class Manager extends \Modele\Manager {
             trigger_error('Impossible de supprimer le sujet : le sujet a un ID invalide. id : ' . $sujet->getId());
         }
     }
+    
+    protected function getMembreANotifier($sujet) {
+        return array();
+    }
 }

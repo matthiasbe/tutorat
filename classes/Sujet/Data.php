@@ -7,45 +7,42 @@ namespace Sujet;
  */
 
 class Data extends \Modele\Data {
-    protected function init() {
-        $this->nature = 'Sujet';
-    }
     
     /**
      * @var int 
      * @access private
      */
-    private $auteurs;
+    protected $auteurs;
     
     /**
      * @var int 
      * @access private
      */
-    private $matiere;
+    protected $matiere;
     
     /**
      * @var int 
      * @access private
      */
-    private $numero_cb;
+    protected $numero_cb;
     
     /**
      * @var int 
      * @access private
      */
-    private $nombre_questions;
+    protected $nombre_questions;
     
     /**
      * @var string 
      * @access private
      */
-    private $date;
+    protected $date;
     
     /**
      * @var string
      * @access private
      */
-    private $notions;
+    protected $notions;
     
     /**
      * @access public
@@ -133,7 +130,7 @@ class Data extends \Modele\Data {
      * @return void
      */
     public function setDate($date) {
-        if(preg_match('#^(0[1-9]|[1-2][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$#', $date) OR $date == '') {
+        if(preg_match('#^(0?[1-9]|[1-2][0-9]|3[01])/(0?[1-9]|1[012])/[0-9]{4}$#', $date) OR $date == '') {
             $this->date = $date;
         }
         else {
@@ -205,7 +202,7 @@ class Data extends \Modele\Data {
      * @return void
      */
     public function setNombre_questions($nombre_questions) {
-        if(is_string($nombre_questions)) {
+        if(is_numeric($nombre_questions)) {
             $this->nombre_questions = $nombre_questions;
         }
         else {

@@ -20,6 +20,10 @@ abstract class Manager extends \Prefab {
      */
     protected $nature;
     
+    /**
+     * Le nom complet de la classe Data
+     * @var string
+     */
     private $data_class;
     
     /**
@@ -32,10 +36,13 @@ abstract class Manager extends \Prefab {
         $this->init();
         $this->db = \Base::instance()->get('Bdd');
         $this->data_class = '\\' . $this->nature . '\\Data';
+        $this->manager_class = '\\' . $this->nature . '\\Manager';
     }
     
     /**
      * Doit instancer les variable table et nature.
+     * @access protected
+     * @return void
      */
     protected abstract function init();
 
@@ -47,6 +54,10 @@ abstract class Manager extends \Prefab {
      */
     public  function add($objet) {
         if($this->idExiste($objet->getId())) throw new \Exception('Fonction ADD sur un ' . $this->data_class . ' existant déjà dans la BDD.');
+        
+        if(method_exists(get_class($this), 'beforeAdd')) {
+            $this->beforeAdd($objet);
+        }
         
         $objet_db = new \DB\SQL\Mapper($this->db, $this->table);
         $objet->remplirMapper($objet_db);
@@ -61,6 +72,10 @@ abstract class Manager extends \Prefab {
      */
     public function update($objet) {
         if($this->idExiste($objet->getId())) {
+            if(method_exists(get_class($this), 'beforeUpdate')) {
+                $this->beforeUpdate($objet);
+            }
+            
             $objet_db = new \DB\SQL\Mapper($this->db, $this->table);
             $objet_db->load(array('id=?', $objet->getId()));
             $objet->remplirMapper($objet_db);
@@ -99,13 +114,13 @@ abstract class Manager extends \Prefab {
             return new $this->data_class($res_array);
         }
         else {
-            return $this->getInvite();
+            return NULL;
         }
     }
     
     /**
      * @access public
-     * @return Array Tous les statut de la BDD.
+     * @return Array Tous les objets de la BDD. Sou forme de tableau d'objets.
      */
     public function getAll() {
         $objets_db = $this->db->exec('SELECT * FROM ' . $this->table);
@@ -114,6 +129,11 @@ abstract class Manager extends \Prefab {
             $objets[$objet['id']] = new $this->data_class($objet);
         }
         return $objets;
+    }
+    
+    public function countAll() {
+        $objet = new \DB\SQL\Mapper($this->db, $this->table);
+        return $objet->count();
     }
     
     /**
@@ -126,24 +146,6 @@ abstract class Manager extends \Prefab {
         $objet = new \DB\SQL\Mapper($this->db, $this->table);
         $nombre_objets = $objet->count(array('id=?', $id));
         return ($nombre_objets == 1);
-    }
-    
-    /**
-     * Permet d'ajouter une alerte pour tous les membres concernés.
-     * @access protected
-     * @param Data $objet L'objet qui fait l'objet de la notification.
-     * @param bool $ajout True s'il s'agit d'une ajout. False pour une modification.
-     * @return void
-     */
-    protected function notifier($objet, $ajout) {
-        $type = $ajout ? \Alerte\Data::ALERT_TYPE_CREATION : \Alerte\Data::ALERT_TYPE_MODIF;
-        $alerte = new Alerte(array(
-            'contenu_id' => $objet->getId(),
-            'contenu_classe' => $this->nature,
-            'type' => $type,
-//            'membres' => $membres
-        ));
-        \Alerte\Manager::instance()->add($alerte);
     }
     
     /**

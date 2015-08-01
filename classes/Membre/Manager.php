@@ -13,45 +13,17 @@ class Manager extends \Modele\Manager {
         $this->table = 'membres';
     }
     
-    /**
-     * Met à jour un membre de la BDD. Renvoie une erreur s'il a une idée non existante.
-     * @access public
-     * @param Data $membre le membre à mettre à jour
-     * @return void
-     */
-    public  function update($membre) {
-        if($this->idExiste($membre->getId())) {
-            $membre_db = new \DB\SQL\Mapper($this->db,'membres');
-            $membre_db->load(array('id=?', $membre->getId()));
-            $ancien_statut = $membre_db->statut;
-            
-            // si il y a validation, on envoie un mail.
-            if($ancien_statut == -1 && $membre->estValide()) {
-                $membre->sendEmailAndGenerateMdp();
-            }
-            
-            $membre->remplirMapper($membre_db);
-            $membre_db->update();
-        }
-        else {
-            trigger_error('Impossible de mettre à jour le membre : le membre a un ID invalide. id : ' . $membre->getId());
+    protected function beforeUpdate(\Membre\Data $membre) {
+        $membre_db = Manager::instance()->getFromId($membre->getId());
+        $ancien_statut = $membre_db->getStatut();
+        // si il y a validation, on envoie un mail.
+        if($ancien_statut == -1 && $membre->estValide()) {
+            $membre->sendEmailAndGenerateMdp();
         }
     }
-
-    /**
-     * Ajout un membre à la BDD. Renvoie une erreur si il à une ID existante.
-     * @access public
-     * @param Data $membre le membre à mettre à jour
-     * @return void
-     */
-    public  function add($membre) {
+    
+    protected function beforeAdd($membre) {
         if($this->pseudoExiste($membre->getPseudo())) throw new \Exception('L\'identifiant ' . $membre->getPseudo() . ' est déjà utilisé. Veuillez en choisir un autre.');
-        if($this->idExiste($membre->getId())) throw new \Exception('Impossible d\'ajouter l\'étudiant : il existe déjà. Id : ' . $membre->getId());
-            
-        $membre_db = new \DB\SQL\Mapper($this->db,'membres');
-        $membre->remplirMapper($membre_db);
-        $membre->setId(NULL);
-        $membre_db->insert();
     }
 
 
@@ -200,5 +172,15 @@ class Manager extends \Modele\Manager {
                 \Msg::instance()->add(3, 'Erreur ligne '. $i . ' colonne ' . $j . ' : ' . $ex->getMessage());
             }
         }
+    }
+    
+    protected function getMembreANotifier($membre) {
+        $membres = array();
+        /*foreach($this->getAll() as $membre) {
+            if($membre->getStatutObject()->getPermission(ADD_MEMBRE)) {
+                $membres[] = $membre->getId();
+            }
+        }*/
+        return $membres;
     }
 }

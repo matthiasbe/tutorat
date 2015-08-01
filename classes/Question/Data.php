@@ -7,9 +7,7 @@ namespace Question;
  */
 
 class Data extends \Modele\Data {
-    protected function init() {
-        $this->nature = 'Question';
-    }
+    
     protected $numero_question;
     protected $id_sujet;
     protected $matiere;
