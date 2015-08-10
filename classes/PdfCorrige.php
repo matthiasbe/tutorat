@@ -118,7 +118,7 @@ class PdfCorrige extends Pdf {
         $this->AddPage();
 
         $this->writeHTMLCell('','',0,45,
-            '<h2 align="center">Concours blanc ' . $this->nomMatiere . ' N°' . $this->sujet->getNumero_cb() . '</h2>');
+            '<h2 align="center">Concours blanc ' . $this->nomMatiere . ' ' . $this->sujet->getNumero_cb() . '</h2>');
         $this->writeHTMLCell('','',0,55,
             '<h2 align="center" color="red">CORRIGE</h2>');
         $image_file = realpath('') . '/files/images/logo.jpg';
