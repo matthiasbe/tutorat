@@ -106,7 +106,7 @@ class Pdf extends TCPDF {
         $this->AddPage();
 
         $this->writeHTMLCell('','',0,45,
-            '<h2 align="center">Concours blanc ' . $this->nomMatiere . ' N°' . $this->sujet->getNumero_cb() . '</h2>');
+            '<h2 align="center">Concours blanc ' . $this->nomMatiere . ' ' . $this->sujet->getNumero_cb() . '</h2>');
         $image_file = realpath('') . '/files/images/logo.jpg';
         $this->image($image_file,30,65,130,'','JPG','','M',false,'','M');
 

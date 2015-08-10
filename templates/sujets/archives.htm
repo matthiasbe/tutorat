@@ -1,7 +1,7 @@
 <h2>Sujets et corrigés</h2>
 <repeat group="{{@sujets}}" value="{{@sujet}}">
     <p>
-        <strong>Concours blanc n°{{@sujet->getNumero_cb()}} de {{@matieres[@sujet->getMatiere()]}} : </strong>
+        <strong>Concours blanc {{@sujet->getNumero_cb()}} de {{@matieres[@sujet->getMatiere()]}} : </strong>
         <a href="{{@root}}sujets/{{@sujet->getId()}}/pdf">Sujet</a> / 
         <a href="{{@root}}sujets/{{@sujet->getId()}}/pdf_corrige">Corrigé</a>
     </p>

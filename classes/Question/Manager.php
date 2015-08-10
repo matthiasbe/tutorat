@@ -24,7 +24,7 @@ class Manager extends \Modele\Manager {
             'membres' => $membres
         ));
         print_r($question);
-        \Alerte\Manager::instance()->add($alerte);
+//        \Alerte\Manager::instance()->add($alerte);
     }
     
     /**
