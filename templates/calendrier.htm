@@ -1,6 +1,6 @@
 <h2>Calendrier des prochains concours blancs</h2>
 <repeat group="{{@sujets}}" value="{{@sujet}}">
-    <p><em>{{@sujet->getDate()}}</em> : Concours blanc n°{{@sujet->getNumero_cb()}} de {{@matieres[@sujet->getMatiere()]}}</p>
+    <p><em>{{@sujet->getDate()}}</em> : Concours blanc {{@sujet->getNumero_cb()}} de {{@matieres[@sujet->getMatiere()]}}</p>
 </repeat>
 <check if="{{empty(@sujets)}}">
     <p>Il n'y a aucun concours blanc à venir.</p>
