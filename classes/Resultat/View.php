@@ -3,7 +3,7 @@
 namespace Resultat;
 
 /* 
- * Classe appelée pour afficher les pages rélatives aux résultats
+ * Classe appelée pour afficher les pages relatives aux résultats
  */
 
 class View {

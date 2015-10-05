@@ -3,7 +3,8 @@
 namespace Membre;
 
 /**
- * Structure accueillant les différents enregistrement de la table 'membres' contenant les différents membre inscrits au site.
+ * Structure accueillant les différents enregistrement de la table 'membres'.
+ * Cette table contient les différents membre inscrits au site.
  */
 
 class Data extends \Modele\Data {
@@ -486,7 +487,13 @@ class Data extends \Modele\Data {
      */
 
     public  function getStatutObject() {
-        return \Statut\Manager::instance()->getFromId($this->statut);
+        $statut = \Statut\Manager::instance()->getFromId($this->statut);
+        if($statut) {
+            return $statut;
+        }
+        else {
+            return \Statut\Manager::instance()->getInvite();
+        }
     }
     
     /**

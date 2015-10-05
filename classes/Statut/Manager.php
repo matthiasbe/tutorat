@@ -108,10 +108,7 @@ class Manager extends \Modele\Manager {
             case SEE_QCMS: return 'Accéder à la <strong>banque de QCM</strong>';
             case SEE_SUJETS_ET_COR: return 'Voir les sujets et leurs corrections au format <strong>pdf</strong>';
             case ADD_MEMBRE: return 'Enregistrer des <strong>comptes</strong> étudiants';
+            case SEE_CARNETS: return 'Voir la page des carnets de cours';
         }
-    }
-    
-    protected function getMembreANotifier($statut) {
-        return array();
     }
 }

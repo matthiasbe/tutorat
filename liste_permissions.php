@@ -2,7 +2,7 @@
 define("ID_INVITE", 50);
 define("ERREUR", 'Vous n\'avez pas les autorisations nécessaires pour effectuer cette action.');
 
-define("NBR_PERMISSIONS", 31);
+define("NBR_PERMISSIONS", 32);
 /*************************
  * LISTE DES PERMISSIONS *
  *************************/
@@ -52,6 +52,9 @@ define("SEE_SUJETS",        0x10000000); // Voir les sujets des autres tuteurs (
 define("BANK",              0x20000000); // Banquer/débanque les question de sa matière
 define("ATTACH",            0x40000000); // Attacher/détacher une question à un/d'un sujet
 define("DELETE_QUESTION",   0x40000000); // Supprimer la question d'une autre tuteur
-//Un dérnière place est disponible
+define("SEE_CARNETS",       0x80000000); // Voir la page des carnets de cours
 // -------- On passe la barre des 32 bits. A partir d'ici, on doit utiliser un bigint sur 64 bits
 // -> impossible sur le serveur OVH
+
+define("ADD_CARNET", ADD_SUJET);
+define("DELETE_CARNET", DELETE_SUJET);

@@ -1,0 +1,59 @@
+<h2>Les carnets de cours</h2>
+<repeat group="{{@matieres}}" key="{{@num_matiere}}" value="{{@nom_matiere}}">
+    <h4>En {{@nom_matiere}} :</h4>
+    <check if="{{CIA(ADD_CARNET) && \Membre\Manager::instance()->getConnected()->gereMatiere(@num_matiere)}}">
+        <img data-toggle="modal" data-target="#modal_ajout" class="bouton"  src="{{@root}}files/images/add.png" />
+    </check>
+    <check if="{{empty(@carnets[@num_matiere])}}">
+        <false>
+            <ul>
+                <repeat group="{{@carnets[@num_matiere]}}" value="{{@nom_fichier}}">
+                    <li><a href="{{\Carnet\Manager::instance()->getFolderWithRoot() . '/' . @num_matiere . '/' . @nom_fichier}}">{{@nom_fichier}}</a>
+                        <check if="{{CIA(DELETE_CARNET) && \Membre\Manager::instance()->getConnected()->gereMatiere(@num_matiere)}}">
+                            <img onclick="delete_carnet('{{@nom_fichier}}')" class="bouton" src="{{@root}}files/images/delete.png" />
+                        </check>
+                    </li>
+                </repeat>
+            </ul>
+        </false>
+        <true>
+            <p>Aucun carnet disponible dans cette matière.</p>
+        </true>
+    </check>
+</repeat>
+
+
+<!-- Fenêtre d'ajout de carnet -->
+<div class="modal fade" id="modal_ajout" role="dialog" aria-labelledby="edit-site" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Ajout d'un carnet de cours</h4>
+            </div>
+            <!-- Formulaire d'ajout de PDF qui recharge la page avec des données POST -->
+            <form method="post" action="carnets" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label for="nom_fichier">
+                            Fichier PDF du carnet : <input type="file" name="nom_fichier" id="nom_fichier" />
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <input type="submit" class="btn btn-primary" value="Envoyer" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function delete_carnet(nom_fichier) {
+        rep = confirm('Êtes-vous sûr de vouloir supprimer le carnet ' + nom_fichier + ' ?');
+        if(rep) {
+            document.location = 'carnets?del=' + nom_fichier;
+        }
+    }
+</script>

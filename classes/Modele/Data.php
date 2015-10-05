@@ -3,7 +3,9 @@
 namespace Modele;
 
 /**
- * Classe qui modélise les enregistrements des statuts dans la BDD.
+ * Classe abstraite permettant de modéliser une donnée récupérée depuis une certaine table de la base de donnée.
+ * Pour l'utiliser :
+ *  * ajouter les champs de la table en protected
  */
 
 abstract class Data {
@@ -15,12 +17,17 @@ abstract class Data {
     protected $id;
     
     /**
+     * Permet de connaitre le Namespacede la classe fille (ex : Membre, Sujet)
      * @return string Le namespace dans lequel on se trouve.
      */
     protected function getNamespace() {
         return explode('\\', get_class($this))[0];
     }
     
+    /**
+     * Construction de la classe.
+     * @param array $donnees Un tableau contenant les données permettant de remplir la classe.
+     */
     public function __construct($donnees) {
         if(!is_array($donnees)) {
             trigger_error('Pour créer une classe \\' . $this->getNamespace() . '\\Data, un array doit être passé en paramètre.');
@@ -52,6 +59,11 @@ abstract class Data {
         return $this->id;
     }
     
+    /**
+     * Met à jour le paramètre id.
+     * @param int $id L'identifiant de la donnée. Unique dans la table (clef primaire).
+     * @throws Exception
+     */
     public function setId($id) {
         if(is_numeric($id) OR $id == "") {
             $this->id = $id;
@@ -60,6 +72,10 @@ abstract class Data {
             throw new Exception('Id invalide : ' . $id);
     }
     
+    /**
+     * Remplit un mapper SQL fournit par FatFree à partir des propriétés de la classe.
+     * @param \DB\SQL\Mapper $mapper Le mapper à remplir.
+     */
     public function remplirMapper(\DB\SQL\Mapper $mapper) {
         foreach ($this as $key=>$value) {
             $mapper->$key = $value;

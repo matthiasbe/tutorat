@@ -4,7 +4,8 @@ namespace Modele;
 
 
 /**
- * 
+ * Il s'agit d'une classe abstraite utilisé par les classe Manager voulant gérer une table SQL donnée.
+ * Elle offre une série de fonctions permettant de gérer cette table.
  */
 
 abstract class Manager extends \Prefab {
