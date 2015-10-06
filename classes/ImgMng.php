@@ -1,9 +1,24 @@
 <?php
-
+/**
+ * Gère les différentes images ajoutés aux sujets.
+ * Cette classe n'utilise pas le format MVC comme les autres comme les autres car crée avant, il faudrait l'adapter.
+ */
 class ImgMng {
+    
+    /**
+     * @var String Le chemin vers le repertoire des images.
+     */
     private $folder;
-    private $folder_without_root;
+    /**
+     * @var String Chemin vers le repertoire des images avec le prefix root (variable globale contenant l'adresse du sous-domaine)
+     */
+    private $folder_with_root;
+    
     private static $instance;
+    
+    /**
+     * @var array Les différentes extensions d'images autorisées.
+     */
     private $img_extensions = array('jpg', 'jpeg');
     const MAX_SIZE = 2000000;
 

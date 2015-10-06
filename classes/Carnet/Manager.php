@@ -110,6 +110,8 @@ class Manager extends \Prefab {
         $web = \Web::instance();
         // Si on ne trouve pas le fichier envoyé, c'est que cette fonction a été appelée par erreur.
         if(!$web->receive()) new \Exception ('Aucun fichier envoyé.');
+        
+        // Sinon on définit une fonction qui permettra de placer le fichier au bonne endroit
         $success = $web->receive(
             function ($file, $formFieldName) {
                 
