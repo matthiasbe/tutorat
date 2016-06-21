@@ -25,8 +25,8 @@ class Manager extends \Prefab {
      */
     public function __construct() {
         $f3 = \Base::instance();
-        $this->folder_with_root = $f3->get('root') . 'files/carnets';
-        $this->folder = 'files/carnets';
+        $this->folder_with_root = $f3->get('root') . 'files/carnets/';
+        $this->folder = 'files/carnets/';
         $this->initDir();
     }
     
@@ -99,6 +99,7 @@ class Manager extends \Prefab {
         // Si on a l'autorisation et les données GET pour supprimer un carnet, on le fait
         if(CIA(DELETE_CARNET) && $f3->exists('GET.del')) {
             // Suppression du carnet
+            $this->deleteFromRequest();
         }
     }
     
@@ -108,16 +109,42 @@ class Manager extends \Prefab {
      */
     public function addFromRequest() {
         $web = \Web::instance();
-        // Si on ne trouve pas le fichier envoyé, c'est que cette fonction a été appelée par erreur.
-        if(!$web->receive()) new \Exception ('Aucun fichier envoyé.');
         
+        // On paramètre le dossier de sauvegarde
+        $this->setF3UploadFolder(1);
         // Sinon on définit une fonction qui permettra de placer le fichier au bonne endroit
-        $success = $web->receive(
-            function ($file, $formFieldName) {
-                
+        $files = $web->receive(
+            function($file) {
+                return true;
             },
             false, // false -> les fichiers du même nom ne sont pas remplacés
             true // true -> le nom de fichier formatté
         );
+        foreach($files as $path=>$success) {
+            $nom_fichier = explode('/', $path)[1];
+            if(!$success) {
+                throw new \Exception('Le fichier ' . $nom_fichier . ' n\'a pas pu être enregistré. Peut-être existe-t-il un fichier du même nom.');
+            }
+            else {
+                \Msg::instance()->add(\Msg::STATUT_SUCCESS,'Le fichier '.$nom_fichier.' a été correctement envoyé.');
+            }
+        }
+    }
+    
+    public function deleteFromRequest() {
+        $f3 = \Base::instance();
+        $filename = $f3->get('GET.del');
+//        $filename = pathinfo($path, PATHINFO_BASENAME);
+        unlink($this->folder . '1/'. $filename);
+    }
+    
+    /**
+     * Règle la variable Uploads de FatFree pour que les pdf envoyés arrivent dans le bon fichier 
+     * au moment de la commande web->receive()
+     * A utiliser juste avant chaque appel de la classe à cette fonction;
+     */
+    public function setF3UploadFolder($num_matiere) {
+        $f3 = \Base::instance();
+        $f3->set('UPLOADS', $this->folder . $num_matiere . '/');
     }
 }
