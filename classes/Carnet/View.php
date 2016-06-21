@@ -13,7 +13,13 @@ class View {
      * @param \Base $f3
      */
     public function liste($f3) {
-        Manager::instance()->addAndDeleteFromRequest();
+        // Les droits d'ajout et de suppression sont vérifiés dans la fonction de la classe Manager
+        try {
+            Manager::instance()->addAndDeleteFromRequest();
+        } catch (\Exception $e) {
+            \Msg::instance()->add(\Msg::STATUT_ERROR, $e->getMessage());
+        }
+
         
         if(CIA(SEE_CARNETS)) {
             $f3->set('carnets', Manager::instance()->getAll());

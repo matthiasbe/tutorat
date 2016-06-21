@@ -10,7 +10,7 @@
                 <repeat group="{{@carnets[@num_matiere]}}" value="{{@nom_fichier}}">
                     <li><a href="{{\Carnet\Manager::instance()->getFolderWithRoot() . '/' . @num_matiere . '/' . @nom_fichier}}">{{@nom_fichier}}</a>
                         <check if="{{CIA(DELETE_CARNET) && \Membre\Manager::instance()->getConnected()->gereMatiere(@num_matiere)}}">
-                            <img onclick="delete_carnet('{{@nom_fichier}}')" class="bouton" src="{{@root}}files/images/delete.png" />
+                            <img onclick="delete_carnet('{{@nom_fichier}}', {{@num_matiere}})" class="bouton" src="{{@root}}files/images/delete.png" />
                         </check>
                     </li>
                 </repeat>
@@ -50,10 +50,10 @@
 </div>
 
 <script type="text/javascript">
-    function delete_carnet(nom_fichier) {
+    function delete_carnet(nom_fichier, num_matiere) {
         rep = confirm('Êtes-vous sûr de vouloir supprimer le carnet ' + nom_fichier + ' ?');
         if(rep) {
-            document.location = 'carnets?del=' + nom_fichier;
+            document.location = 'carnets?del=' + nom_fichier + '&mat=' + num_matiere;
         }
     }
 </script>

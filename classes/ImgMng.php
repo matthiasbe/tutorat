@@ -24,8 +24,8 @@ class ImgMng {
 
     public function __construct() {
         $f3 = Base::instance();
-        $this->folder = $f3->get('root') . $f3->get('UPLOADS');
-        $this->folder_without_root = $f3->get('UPLOADS');
+        $this->folder_with_root = $f3->get('root') . $this->folder;
+        $this->folder= 'files/dl/';
         if(!isset(self::$instance)) {
             self::$instance = $this;
         }
@@ -49,11 +49,13 @@ class ImgMng {
      * @return void
      */
     public function imageUpload() {
-        // Array qui sera serialized puis envoyé comme echo
+        //On paramètre le dossier de sauvegarde
+        $this->setF3UploadFolder();
         
         $web = \Web::instance();
+        // On crée la fonction de callback
         $files = $web->receive(
-            function($file, $formFieldName) {
+            function($file) {
                 global $retour;
                 // On lève les différentes erreurs possible
                 if(!$this->estUneImage($file['name'])) {
@@ -88,7 +90,7 @@ class ImgMng {
         }
     }
     
-    /* APPELE VIA AJAX
+    /** APPELE VIA AJAX
      * Suppression d'une image via ajax
      * @access public
      * @return void
@@ -97,11 +99,11 @@ class ImgMng {
         $path = $f3->get('POST.image_path');
         $filename = pathinfo($path, PATHINFO_BASENAME);
         if($this->estUneImage($filename)) {
-            unlink($this->folder_without_root . $filename);
+            unlink($this->folder. $filename);
         }
     }
     
-    /*
+    /**
      * Renvoie TRUE si il s'agit d'une image, FALSE sinon
      * @access public
      * @param nom_fichier le nom du fichier à évaluer
@@ -111,5 +113,15 @@ class ImgMng {
     public function estUneImage($nom_fichier) {
         $extension = pathinfo($nom_fichier, PATHINFO_EXTENSION);
         return in_array($extension, $this->img_extensions);
+    }
+    
+    /**
+     * Règle la variable Uploads de FatFree pour que les images envoyées arrivent dans le bon fichier 
+     * au moment de la commande web->receive()
+     * A utiliser juste avant chaque appel de la classe à cette fonction;
+     */
+    public function setF3UploadFolder() {
+        $f3 = \Base::instance();
+        $f3->set('UPLOADS', $this->folder . '/');
     }
 }

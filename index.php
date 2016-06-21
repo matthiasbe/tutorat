@@ -1,4 +1,5 @@
 <?php
+phpinfo();
 // Définition des constantes
 include('liste_permissions.php');
 define('PAGE_ERREUR', 'templates/forbidden.htm');

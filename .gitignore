@@ -3,7 +3,6 @@
 files/download/
 config/bdd*
 .htaccess*
-config/
 files/
 js/ckeditor/
 js/jsme/
