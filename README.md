@@ -1,6 +1,6 @@
 ## Site web du tutorat de médecine KB
 
-Application web utilisant le framework [Fat Free Framework](http://fatfreeframework.com/) pour répondre aux besoins Backend et le framework BootStrap pour répondre aux besoins Frontend.
+Application web utilisant le framework [Fat Free Framework](http://fatfreeframework.com/) pour répondre aux besoins Backend et le framework [BootStrap](http://getbootstrap.com/) pour répondre aux besoins Frontend.
 
 ### Fonctionnalités:
 * Connexions/inscriptions
