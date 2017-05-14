@@ -20,4 +20,9 @@ Application web utilisant le framework [Fat Free Framework](http://fatfreeframew
 
 Parmi les classes PHP on retrouve également des classes permettant des fonctionnalités transverses ainsi que le dossier `Modèle` qui correspond à un modèle de classe `Data` et `Manager`, permettant de factoriser le code commun aux différentes pages.
 
-* 
+* Le dossier `css` contient les feuilles de styles
+* Le dossier `files/images` contient les images du projet
+* Le dossier `fonts` contient les différentes polices
+* Le dossier `js` contient les scripts javascript utilisés dans les différentes pages
+* Le dossier `lib` contient les fichiers du framework PHP FatFree
+* Le dossier `templates` contient les différentes page html du siter internet
